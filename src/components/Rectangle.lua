@@ -4,19 +4,17 @@ local property = require "util.property"
 
 local Item = require "components.Item"
 
-local Text = class("Text", Item.class)
+local Rectangle = class("Rectangle", Item.class)
 
-function Text:initialize(tbl)
-  property(self, tbl, "text", "", "string")
-
-  property(self, tbl, "color", {0, 0, 0}, "table")
+function Rectangle:initialize(tbl)
+  property(self, tbl, "color", {255, 255, 255}, "table")
 
   Item.class.initialize(self, component.evalArgs(self, nil, tbl))
 end
 
-function Text:draw()
+function Rectangle:draw()
   love.graphics.setColor(self.color)
-  love.graphics.print(self.text, 0, 0)
+  love.graphics.rectangle("fill", 0, 0, self.width, self.height)
 end
 
-return component(Text)
+return component(Rectangle)

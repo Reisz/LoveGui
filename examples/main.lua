@@ -1,11 +1,12 @@
 package.path = "?;?.lua;?/init.lua;../src/?;../src/?.lua;../src/?/init.lua"
 local examples = {}
 examples.h = require "HelloWorld"
+examples.r = require "Rectangles"
 
 local currentExample = "h"
 
 local helpFont, textWidth
-local text = "Press to switch: [H] Hello World"
+local text = "Press to switch: [H] Hello World  [R] Rectangles"
 
 function love.load()
   helpFont = love.graphics.newFont(12)

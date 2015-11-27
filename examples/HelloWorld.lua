@@ -3,7 +3,8 @@ local Text = require "components.Text"
 
 return Item {
   Text {
-    x = 300, y = 150,
+    x = 350, y = 300,
+    color = {0,0,255},
     text = "Hello World!"
   }
 }
