@@ -8,11 +8,11 @@ local Rect = require "Util.Rect"
 local Item = class("Item")
 
 function Item:initialize(tbl)
-  property(self, tbl, "x", 0, "number")
-  property(self, tbl, "y", 0, "number")
+  property(self, tbl, "x", 0)
+  property(self, tbl, "y", 0)
 
-  property(self, tbl, "width", 0, "number")
-  property(self, tbl, "height", 0, "number")
+  property(self, tbl, "width", 0)
+  property(self, tbl, "height", 0)
 
   self.rect = Rect(0, 0, 0, 0)
   component.binding(self.rect, "x", self.properties.x)
@@ -20,12 +20,12 @@ function Item:initialize(tbl)
   component.binding(self.rect, "width", self.properties.width)
   component.binding(self.rect, "height", self.properties.height)
 
-  property(self, tbl, "implicitWidth", 0, "number")
-  property(self, tbl, "implicitHeight", 0, "number")
+  property(self, tbl, "implicitWidth", 0)
+  property(self, tbl, "implicitHeight", 0)
 
-  property(self, tbl, "visible", true, "boolean")
+  property(self, tbl, "visible", true)
 
-  property(self, tbl, "children", {}, "table")
+  property(self, tbl, "children", {})
 
   component.evalArgs(self, "children", tbl)
 end

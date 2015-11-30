@@ -7,9 +7,9 @@ local Item = require "components.Item"
 local Text = class("Text", Item.class)
 
 function Text:initialize(tbl)
-  property(self, tbl, "text", "", "string")
+  property(self, tbl, "text", "")
 
-  property(self, tbl, "color", {0, 0, 0}, "table")
+  property(self, tbl, "color", {0, 0, 0})
 
   Item.class.initialize(self, component.evalArgs(self, nil, tbl))
 end
