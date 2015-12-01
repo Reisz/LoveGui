@@ -16,11 +16,11 @@ end
 
 
 function love.draw()
+  examples[currentExample]:draw()
   love.graphics.setColor(0, 0, 0, 50)
   love.graphics.rectangle("fill", 0, 0, textWidth + 10, helpFont:getHeight() + 4)
   love.graphics.setColor(0, 0, 0)
   love.graphics.print(text, 5, 2)
-  examples[currentExample]:draw()
 end
 
 function love.textinput(t)

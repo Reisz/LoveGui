@@ -1,11 +1,11 @@
 local e = require "util.property.error"
-local tables = require "util.tables"
+local typeMatcher, check = require "util.property.type"()
 
 local property = {}
 
 local function set(self, value)
   local t, _t = self.type, type(value)
-  if t ~= "" and t ~= _t then
+  if not check(t, _t) then
     error(e.invalid_type:format(t, _t), 4)
   end
 
@@ -19,21 +19,17 @@ local function notify(self, value)
 end
 
 local function get(self)
-  local v = self.value
-  if type(v) == "table" then
-    return tables.shallowCopy(v)
-  end
-  return v
+  return self.value
 end
 
-function property.new(tbl, args, name, value, ignoreType)
-  t = ignoreType and "" or type(value)
+function property.new(tbl, args, name, value, flags)
+  local t = typeMatcher(value, flags)
 
   -- look for initial assignment
   local v = args[name]
   if v then
     local _t = type(v)
-    if t ~= "" and t ~= _t then
+    if not check(t, _t) then
       error(e.initial_type_invalid:format(name, t, _t))
     end
 

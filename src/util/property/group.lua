@@ -68,16 +68,15 @@
 --- local color = rectangle.border.color
 --- local width = rectangle.border.width
 --- ```
---- Get the value of a specific subproperty. Will actually return a shallow copy
---- of any table subproperties.
+--- Get the value of a specific subproperty.
 local e = require "util.property.error"
-local tables = require "util.tables"
+local typeMatcher, check = require "util.property.type"()
 
 -- group assignment
 local function set(self, value)
   for i, t in pairs(self.types) do
     local _t = type(value[i])
-    if t ~= "" and t ~= _t then
+    if not check(t, _t) then
       error(e.group_invalid_assignment:format(i, t, _t), 4)
     end
     self.group[i] = value[i]
@@ -90,7 +89,7 @@ local function get_helper_newindex(tbl, key, val)
   local self = tbl[1]
 
   local t, _t = self.types[key], type(val)
-  if t ~= "" and t ~= _t then
+  if not check(t, _t) then
     error(e.invalid_type:format(t, _t), 4)
   end
 
@@ -104,23 +103,19 @@ local function notify(self, value)
 end
 
 local function get_helper_index(tbl, key)
-  local v = tbl[1].group[key]
-  if type(v) == "table" then
-    return tables.shallowCopy(v)
-  end
-  return v
+  return tbl[1].group[key]
 end
 
 local function get(self)
   return self.get_helper
 end
 
-return function(tbl, args, name, group, ignoreType)
+return function(tbl, args, name, group, flags)
   local types, _group = {}, args[name] or {}
 
   -- confirm all types and look for initial assignments
   for i, v in pairs(group) do
-    local t = ignoreType and "" or type(v)
+    local t = typeMatcher(v, flags)
 
     -- 2 types of initial assignment
     local v1, v2 = args[name .. "_" .. i], _group[i]
@@ -131,7 +126,7 @@ return function(tbl, args, name, group, ignoreType)
     -- initial assignment is in v1
     if v1 then
       local _t = type(v1)
-      if t ~= "" and t ~= _t then
+      if not check(t, _t) then
         error(e.group_initial_type_invalid:format(name, i, t, type(v1)), 5)
       end
 
