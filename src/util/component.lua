@@ -33,7 +33,7 @@ local component = {}
 
 -- each class must have the public tables: properties
 function component.createComponent(class)
-  return setmetatable( {class = class}, { __call = newInstance})
+  return setmetatable( {class = class}, { __call = newInstance, __index = class })
 end
 
 function component.binding(tbl, field, property)

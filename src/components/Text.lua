@@ -6,36 +6,36 @@ local Item = require "components.Item"
 
 local Text = class("Text", Item.class)
 
--- TODO font family / font style
 -- TODO markdown support
 
 function Text:initialize(tbl)
   property(self, tbl, "text", "")
+  property(self, tbl, "baseUrl", "")
 
   property.group(self, tbl, "font", {
-    size = 12,
-    data = "",
-    imageFontGlyphs = ""
-  }, { -- flags
-    data = { any = true }
+    family = "", size = 12,
+    bold = false, italic = false, strikeout = false, underline = false,
   })
   component.functionBinding(function(font)
-    if font.imageFontGlyphs ~= "" then
-      self._font = love.graphics.newImageFont(font.data, font.imageFontGlyphs)
-    elseif font.data and font.data ~= "" then
-      local data = font.data
-      if not love.filesystem.exists(data) then -- try to load from system fonts
-        local f = io.open(data, "rb")
-        data = love.filesystem.newFileData(f:read("*a"), data)
-        f:close()
-      end
-      self._font = love.graphics.newFont(data, font.size)
+    if font.family ~= "" then
+      -- TODO font family / font style
+      error("Font Management not yet Implemented")
     else
       self._font = love.graphics.newFont(font.size)
     end
   end, self.properties.font)()
 
+  property(self, tbl, "lineHeight", 1.0)
+
   property(self, tbl, "color", {0, 0, 0})
+  property(self, tbl, "linkColor", {0,0,238})
+
+  property(self, tbl, "plainText", false) -- TODO plain text check
+
+  property(self, tbl, "wrapMode", "NoWrap") -- WordWrap, WrapAnywhere
+
+  property(self, tbl, "horizontalAlignment", "left") -- right, center, justify
+  property(self, tbl, "verticalAlignment", "top") -- center, bottom
 
   Item.class.initialize(self, component.evalArgs(self, nil, tbl))
 end

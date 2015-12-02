@@ -1,21 +1,24 @@
+local rgb = require "util.rgb" ()
+
 local Item = require "components.Item"
 local Text = require "components.Text"
+local ImageFontText = require "components.ImageFontText"
 
 return Item {
   Text {
     x = 300, y = 200,
-    color = {0,0,255},
+    color = rgb(0,0,255),
     text = "Hello World!",
     font_size = 35
   },
-  Text {
-    x = 315, y = 350,
-    color = {0,0,255},
+  ImageFontText {
+    x = 340, y = 350,
+    color = rgb(0,0,255),
     text = "Hello World!",
     font = {
-      size = 35,
-      data = "imagefont.png",
-      imageFontGlyphs = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\""
+      src = "imagefont.png",
+      -- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
+      glyphs = " " .. ImageFontText.aAd .. ".,!?-+/():;%&`'*#=[]\""
     }
   }
 }
