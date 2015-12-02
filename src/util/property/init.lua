@@ -9,8 +9,9 @@ local function set(self, value)
     error(e.invalid_type:format(t, _t), 4)
   end
 
+  local _v = self.value
   self.value = value
-  self:notify(value)
+  if _v ~= value then self:notify(value) end
 end
 
 local function notify(self, value)

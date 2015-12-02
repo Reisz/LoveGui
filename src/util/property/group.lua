@@ -74,15 +74,17 @@ local typeMatcher, check = require "util.property.type" ()
 
 -- group assignment
 local function set(self, value)
+  local changed = false
   for i, t in pairs(self.types) do
     local _t = type(value[i])
     if not check(t, _t) then
       error(e.group_invalid_assignment:format(i, t, _t), 4)
     end
+    if self.group[i] ~= value[i] then changed = true end
     self.group[i] = value[i]
   end
 
-  self:notify(value)
+  if changed then self:notify(value) end
 end
 
 local function get_helper_newindex(tbl, key, val)
@@ -93,8 +95,9 @@ local function get_helper_newindex(tbl, key, val)
     error(e.invalid_type:format(t, _t), 4)
   end
 
-  self.group[key] = val
-  self:notify(self.group)
+  local _v = self.group[key]
+  self.group[key] = value
+  if _v ~= value then self:notify(self.group) end
 end
 
 local function notify(self, value)
@@ -110,12 +113,20 @@ local function get(self)
   return self.get_helper
 end
 
+local nilTable = {}
+local nilCheck = { [nilTable] = true }
+
 return function(tbl, args, name, group, flags)
   local types, _group = {}, args[name] or {}
 
+  -- also include types that are nil by default
+  for i, v in pairs(flags) do
+    if not group[i] then group[i] = nilTable end
+  end
+
   -- confirm all types and look for initial assignments
   for i, v in pairs(group) do
-    local t = typeMatcher(v, flags and flags[i])
+    local t = typeMatcher(v, flags and flags[i]); types[i] = t
 
     -- 2 types of initial assignment
     local v1, v2 = args[name .. "_" .. i], _group[i]
@@ -132,6 +143,9 @@ return function(tbl, args, name, group, flags)
 
       group[i] = v1
     end
+    
+    -- avoid custom __eq on empty tables
+    if nilCheck[group[i]] then group[i] = nil end
   end
 
   -- create group property
