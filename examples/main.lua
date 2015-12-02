@@ -1,4 +1,4 @@
-package.path = "?;?.lua;?/init.lua;../src/?;../src/?.lua;../src/?/init.lua"
+package.path = "?.lua;?/init.lua;../src/?.lua;../src/?/init.lua"
 local examples = {}
 examples.h = require "HelloWorld"
 examples.r = require "Rectangles"

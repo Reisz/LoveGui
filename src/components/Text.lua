@@ -4,29 +4,28 @@ local property = require "util.property"
 
 local Item = require "components.Item"
 
-local fontDiretories = {
-  ["OS X"] = "/Library/Fonts",
-  ["Windows"] = "C:/Windows/Fonts/",
-  ["Linux"] = "/usr/share/fonts"
-}
--- TODO confirm and improve
-
 local Text = class("Text", Item.class)
+
+-- TODO font family / font style
+-- TODO markdown support
 
 function Text:initialize(tbl)
   property(self, tbl, "text", "")
 
   property.group(self, tbl, "font", {
     size = 12,
-    data = ""
+    data = "",
+    imageFontGlyphs = ""
   }, { -- flags
     data = { any = true }
   })
   component.functionBinding(function(font)
-    if font.data and font.data ~= "" then
+    if font.imageFontGlyphs ~= "" then
+      self._font = love.graphics.newImageFont(font.data, font.imageFontGlyphs)
+    elseif font.data and font.data ~= "" then
       local data = font.data
       if not love.filesystem.exists(data) then -- try to load from system fonts
-        local f = io.open(fontDiretories[love.system.getOS()] .. data, "rb")
+        local f = io.open(data, "rb")
         data = love.filesystem.newFileData(f:read("*a"), data)
         f:close()
       end

@@ -14,7 +14,8 @@ return Item {
     text = "Hello World!",
     font = {
       size = 35,
-      data = "times.ttf"
+      data = "imagefont.png",
+      imageFontGlyphs = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\""
     }
   }
 }

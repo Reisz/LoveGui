@@ -3,7 +3,7 @@ local component = require "util.component"
 local property = require "util.property"
 
 local Point = require "util.Point"
-local Rect = require "Util.Rect"
+local Rect = require "util.Rect"
 
 local Item = class("Item")
 
