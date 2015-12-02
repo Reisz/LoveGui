@@ -1,5 +1,5 @@
 local e = require "util.property.error"
-local typeMatcher, check = require "util.property.type"()
+local typeMatcher, check = require "util.property.type" ()
 
 local property = {}
 

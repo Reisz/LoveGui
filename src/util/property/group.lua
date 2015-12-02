@@ -70,7 +70,7 @@
 --- ```
 --- Get the value of a specific subproperty.
 local e = require "util.property.error"
-local typeMatcher, check = require "util.property.type"()
+local typeMatcher, check = require "util.property.type" ()
 
 -- group assignment
 local function set(self, value)
