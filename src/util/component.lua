@@ -37,9 +37,14 @@ function component.createComponent(class)
 end
 
 function component.binding(tbl, field, property)
-  table.insert(property.callbacks, function(value)
-    tbl[field] = value
-  end)
+  local fn = function(value) tbl[field] = value end
+  table.insert(property.callbacks, fn)
+  return function() fn(property:get()) end
+end
+
+function component.functionBinding(fn, property)
+  table.insert(property.callbacks, fn)
+  return function() fn(property:get()) end
 end
 
 function component.evalArgs(tbl, defaultProp, args)

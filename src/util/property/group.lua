@@ -115,7 +115,7 @@ return function(tbl, args, name, group, flags)
 
   -- confirm all types and look for initial assignments
   for i, v in pairs(group) do
-    local t = typeMatcher(v, flags)
+    local t = typeMatcher(v, flags and flags[i])
 
     -- 2 types of initial assignment
     local v1, v2 = args[name .. "_" .. i], _group[i]
