@@ -11,7 +11,7 @@ local function updateFont(self, font)
     -- for versions 0.10.0 and above
     self._font = love.graphics.newImageFont(font.src, font.glyphs, font.extraSpacing)
   else
-    -- for versions 0.9.x
+    -- for versions 0.8.0 to 0.9.2
     self._font = love.graphics.newImageFont(font.src, font.glyphs)
   end
 end
@@ -23,7 +23,8 @@ function ImageFontText:initialize(tbl)
   property.group(self, tbl, "font", {
     src = "", glyphs = "", extraSpacing = 0
   }, { -- flags
-    src = { any = true } -- support for all inputs of newImageFont
+    src = "_" -- support for all inputs of newImageFont
+    -- TODO improve matcher
   })
   component.functionBinding(function(font)
     updateFont(self, font)

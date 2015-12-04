@@ -1,12 +1,13 @@
 local e = require "util.property.error"
-local typeMatcher, check = require "util.property.type" ()
+local matcher = require "util.matching"
+local typeMatcher = require "util.matching.type"
 
 local property = {}
 
 local function set(self, value)
-  local t, _t = self.type, type(value)
-  if not check(t, _t) then
-    error(e.invalid_type:format(t, _t), 4)
+  if not self.type(value) then
+    error(e.invalid_type:format(nil, nil), 4)
+    -- TODO fix messages
   end
 
   local _v = self.value
@@ -24,14 +25,15 @@ local function get(self)
 end
 
 function property.new(tbl, args, name, value, flags)
-  local t = typeMatcher(value, flags)
+  local t = typeMatcher[type(value)]
+  if flags then t = matcher(flags) end
 
   -- look for initial assignment
   local v = args[name]
   if v then
-    local _t = type(v)
-    if not check(t, _t) then
-      error(e.initial_type_invalid:format(name, t, _t))
+    if not t(v) then
+      error(e.initial_type_invalid:format(name, nil, nil))
+      -- TODO fix messages
     end
 
     value = args[name]

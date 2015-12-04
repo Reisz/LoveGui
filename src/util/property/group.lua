@@ -70,15 +70,16 @@
 --- ```
 --- Get the value of a specific subproperty.
 local e = require "util.property.error"
-local typeMatcher, check = require "util.property.type" ()
+local matcher = require "util.matching"
+local typeMatcher = require "util.matching.type"
 
 -- group assignment
 local function set(self, value)
   local changed = false
   for i, t in pairs(self.types) do
-    local _t = type(value[i])
-    if not check(t, _t) then
-      error(e.group_invalid_assignment:format(i, t, _t), 4)
+    if not t(value[i]) then
+      error(e.group_invalid_assignment:format(i, nil, nil), 4)
+      -- TODO fix messages
     end
     if self.group[i] ~= value[i] then changed = true end
     self.group[i] = value[i]
@@ -90,14 +91,14 @@ end
 local function get_helper_newindex(tbl, key, val)
   local self = tbl[1]
 
-  local t, _t = self.types[key], type(val)
-  if not check(t, _t) then
-    error(e.invalid_type:format(t, _t), 4)
+  if not self.types[key](val) then
+    error(e.invalid_type:format(nil, nil), 4)
+    -- TODO fix messages
   end
 
   local _v = self.group[key]
-  self.group[key] = value
-  if _v ~= value then self:notify(self.group) end
+  self.group[key] = val
+  if _v ~= val then self:notify(self.group) end
 end
 
 local function notify(self, value)
@@ -120,13 +121,16 @@ return function(tbl, args, name, group, flags)
   local types, _group = {}, args[name] or {}
 
   -- also include types that are nil by default
-  for i, v in pairs(flags) do
-    if not group[i] then group[i] = nilTable end
+  if flags then
+    for i, v in pairs(flags) do
+      if not group[i] then group[i] = nilTable end
+    end
   end
 
   -- confirm all types and look for initial assignments
   for i, v in pairs(group) do
-    local t = typeMatcher(v, flags and flags[i]); types[i] = t
+    local t, f = typeMatcher[type(v)], flags and flags[i]
+    if f then t = matcher(f) end
 
     -- 2 types of initial assignment
     local v1, v2 = args[name .. "_" .. i], _group[i]
@@ -136,14 +140,14 @@ return function(tbl, args, name, group, flags)
 
     -- initial assignment is in v1
     if v1 then
-      local _t = type(v1)
-      if not check(t, _t) then
-        error(e.group_initial_type_invalid:format(name, i, t, type(v1)), 5)
+      if not t(v1) then
+        error(e.group_initial_type_invalid:format(name, i, nil, nil), 5)
+        -- TODO fix messages
       end
 
       group[i] = v1
     end
-    
+
     -- avoid custom __eq on empty tables
     if nilCheck[group[i]] then group[i] = nil end
   end
