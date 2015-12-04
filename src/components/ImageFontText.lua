@@ -37,7 +37,7 @@ function ImageFontText:initialize(tbl)
   property(self, tbl, "shearX", 0)
   property(self, tbl, "shearY", 0)
 
-  Item.class.initialize(self, component.evalArgs(self, nil, tbl))
+  Item.class.initialize(self, tbl)
 end
 
 function ImageFontText:draw()

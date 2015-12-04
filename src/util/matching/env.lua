@@ -37,7 +37,7 @@ usemt_call_index "pt" -- string matches a pattern
 usemt_call_index "ts_pt" -- tostring matches a pattern
 usemt_call_index "ts" -- tostring equals
 usemt_call_index "tn" -- tonumber equals
--- functions work implicitly, when global environment is set
+-- functions work implicitly, because global environment is set
 
 -- middleclass matchers
 function env.is.class(v) return Object.inSubclassOf(v, Object) end
@@ -49,8 +49,8 @@ usemt_call_index "o_pt" -- object of class with name matches a pattern
 usemt_call_index "subc" -- subclass of class with name equals
 usemt_call_index "subc_pt" -- subclass of class with name matches a pattern
 
-
 -- love2d matchers
+function env.is.l2object(v) return type(v) == "userdata" and type(v.typeOf) == "function" end
 usemt_call_index "l2t" -- is love2d object with type equals
 
 return setmetatable(env, { __index = _G })

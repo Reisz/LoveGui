@@ -24,7 +24,7 @@ local function get(self)
   return self.value
 end
 
-function property.new(tbl, args, name, value, flags)
+local function createProperty(args, name, value, flags)
   local t = typeMatcher[type(value)]
   if flags then t = matcher(flags) end
 
@@ -40,11 +40,22 @@ function property.new(tbl, args, name, value, flags)
   end
 
   -- create property
-  if not tbl.properties then tbl.properties = {} end
-  tbl.properties[name] = { "property",
+  return { "property",
     value = value, type = t, callbacks = {},
     set = set, get = get, notify = notify
   }
+end
+
+function property.new(tbl, args, name, value, flags)
+  tbl.properties[name] = createProperty(args, name, value, flags)
+end
+
+function property.default(tbl, args, name, value, flags)
+  local prop = createProperty(args, name, value, flags)
+  tbl.properties[name] = prop
+  if not tbl._defaultProp then
+    tbl._defaultProp = { class = tbl.class, prop = prop }
+  end
 end
 
 property.group = require "util.property.group"

@@ -160,6 +160,5 @@ return function(tbl, args, name, group, flags)
   g.get_helper = setmetatable({g}, { __index = get_helper_index, __newindex = get_helper_newindex })
 
   -- add to component
-  if not tbl.properties then tbl.properties = {} end
   tbl.properties[name] = g
 end

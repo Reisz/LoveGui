@@ -22,11 +22,28 @@ local function __newindex(tbl, key, value)
 end
 
 local function newInstance(tbl, data)
-  return setmetatable({}, {
-    instance = tbl.class:new(data),
-    __index = __index,
-    __newindex = __newindex
+  local instance = tbl.class:allocate()
+
+  -- prepare for usage as component
+  instance.properties = {}
+  instance = setmetatable({}, {
+    instance = instance, __index = __index, __newindex = __newindex
   })
+
+  -- initialize
+  instance:initialize(data)
+
+  -- handle default properties
+  if instance._defaultProp then
+    local def = instance._defaultProp.prop:get()
+    if instance._defaultProp.class ~= tbl.class and #data > 0 then
+      error() -- TODO msg
+    end
+    for i = 1, #data do table.insert(def, data[i]) end
+    instance._defaultProp = nil
+  end
+
+  return instance
 end
 
 local component = {}
@@ -45,16 +62,6 @@ end
 function component.functionBinding(fn, property)
   table.insert(property.callbacks, fn)
   return function() fn(property:get()) end
-end
-
-function component.evalArgs(tbl, defaultProp, args)
-  local def = defaultProp and tbl.properties[defaultProp]:get() or {}
-  for i = 1, #args do
-    table.insert(def, args[i])
-    args[i] = nil
-  end
-
-  return args
 end
 
 return setmetatable(component, { __call = function(_, ...) return component.createComponent(...) end })

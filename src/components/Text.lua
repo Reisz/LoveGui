@@ -39,7 +39,7 @@ function Text:initialize(tbl)
   property(self, tbl, "horizontalAlignment", "left", "v{'left', 'right', 'center', 'justify'}")
   property(self, tbl, "verticalAlignment", "top", "v{'top', 'center', 'bottom'}")
 
-  Item.class.initialize(self, component.evalArgs(self, nil, tbl))
+  Item.class.initialize(self, tbl)
 end
 
 function Text:draw()

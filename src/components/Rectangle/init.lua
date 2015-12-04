@@ -17,10 +17,10 @@ function Rectangle:initialize(tbl)
   property(self, tbl, "color", {255, 255, 255})
   -- TODO gradient (properties expecting component)
   property(self, tbl, "radius", 0)
-  property(self, tbl, "radiusSegments", self.properties.radius:get())
+  property(self, tbl, "radiusSegments", self.radius)
   component.binding(self, "radiusSegments", self.properties.radius)
 
-  Item.class.initialize(self, component.evalArgs(self, nil, tbl))
+  Item.class.initialize(self, tbl)
 end
 
 function Rectangle:draw()

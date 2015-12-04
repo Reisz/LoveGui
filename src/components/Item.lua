@@ -25,9 +25,7 @@ function Item:initialize(tbl)
 
   property(self, tbl, "visible", true)
 
-  property(self, tbl, "children", {})
-
-  component.evalArgs(self, "children", tbl)
+  property.default(self, tbl, "children", {})
 end
 
 function Item:draw()
