@@ -40,7 +40,7 @@ function ImageFontText:initialize(tbl)
   Item.class.initialize(self, tbl)
 end
 
-function ImageFontText:draw()
+function ImageFontText:cDraw()
   local scaleX, scaleY = self.scale, self.scale
   if type(scaleX) == "table" then
     scaleX = scaleX[1]

@@ -27,6 +27,32 @@ local function getWrapModeValueMatcher()
   return "v{'clamp', 'repeat'}"
 end
 
+local function createCanvas(width, height, format, msaa, min, mag, ani, wrapMode)
+  local result
+  if version >= version{0,9,1} then
+    result = love.graphics.newCanvas(width, height, format, msaa)
+  elseif version >= version{0,9,0} then
+    result = love.graphics.newCanvas(width, height, format)
+  else
+    result = love.graphics.newCanvas(width, height)
+  end
+
+  if version >= version{0,9,0} then
+    result:setFilter(min, mag, ani)
+  else
+    result:setFilter(min, mag)
+  end
+
+  local wrapX, wrapY = wrapMode, wrapMode
+  if type(wrapX) == "table" then
+    wrapX = wrapX[1]
+    wrapY = wrapY[2]
+  end
+  result:setWrap(wrapX, wrapY)
+
+  return result
+end
+
 function Item:initialize(tbl)
   property(self, tbl, "x", 0)
   property(self, tbl, "y", 0)
@@ -40,6 +66,16 @@ function Item:initialize(tbl)
   component.binding(self.rect, "width", self.properties.width)
   component.binding(self.rect, "height", self.properties.height)
 
+  local function layer()
+    if self.layer.enabled then
+      self._canvas = createCanvas(self.width, self.height, self.layer.format,
+        self.layer.msaa, self.layer.minFilter, self.layer.magFilter,
+        self.layer.anisotropy, self.layer.wrapMode)
+    end
+  end
+  component.functionBinding(layer,  self.properties.width)
+  component.functionBinding(layer,  self.properties.height)
+
   property(self, tbl, "implicitWidth", 0)
   property(self, tbl, "implicitHeight", 0)
 
@@ -50,10 +86,11 @@ function Item:initialize(tbl)
     minFilter = "linear", magFilter = "linear", anisotropy = 1,
     wrapMode = "repeat"
   }, {
-    format = getCanvasFormatMatcher(), shader = "any(l2t.Shader)",
+    format = getCanvasFormatMatcher(), shader = "may(l2t.Shader)",
     minFilter = filterMatcher, magFilter = filterMatcher,
     wrapMode = table.concat{"any{", wm,",tbl{", wm, ",", wm, "}}"}
   })
+  component.functionBinding(layer, self.properties.layer)()
 
   property(self, tbl, "visible", true)
 
@@ -62,12 +99,16 @@ end
 
 function Item:draw()
   if not self.visible then return end
+  self:cDraw()
+end
+
+function Item:cDraw()
   local children = self.children
   for i = #children, 1, -1 do
     local c = children[i]
     love.graphics.push()
     love.graphics.translate(c.x, c.y)
-    c:draw()
+    c:cDraw()
     love.graphics.pop()
   end
 end

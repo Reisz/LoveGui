@@ -42,7 +42,7 @@ function Text:initialize(tbl)
   Item.class.initialize(self, tbl)
 end
 
-function Text:draw()
+function Text:cDraw()
   love.graphics.setColor(self.color)
   love.graphics.setFont(self._font)
   love.graphics.print(self.text, 0, 0)

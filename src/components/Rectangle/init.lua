@@ -23,7 +23,7 @@ function Rectangle:initialize(tbl)
   Item.class.initialize(self, tbl)
 end
 
-function Rectangle:draw()
+function Rectangle:cDraw()
   love.graphics.setColor(self.color)
   fill(self.width, self.height, self.radius, self.radiusSegments)
 
