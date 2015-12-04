@@ -15,10 +15,13 @@ local env = require "util.matching.env"
 
 local function matcher(m)
   if _VERSION == "Lua 5.1" then
-    local chunk = loadstring("return " .. m)
-    return setfenv(chunk, env)()
+    local fn, msg = loadstring("return " .. m)
+    if not fn then error(msg) end
+    return setfenv(fn, env)()
   else -- Lua 5.2 or higher
-    return load("return " .. m, "matcher", "bt", env)()
+    local fn, msg = load("return " .. m, "matcher", "bt", env)()
+    if not fn then error(msg) end
+    return fn()
   end
 end
 

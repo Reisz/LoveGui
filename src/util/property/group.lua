@@ -122,7 +122,7 @@ return function(tbl, args, name, group, flags)
 
   -- also include types that are nil by default
   if flags then
-    for i, v in pairs(flags) do
+    for i in pairs(flags) do
       if not group[i] then group[i] = nilTable end
     end
   end

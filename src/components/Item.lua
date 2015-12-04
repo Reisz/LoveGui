@@ -1,11 +1,31 @@
 local class = require "util.middleclass"
 local component = require "util.component"
 local property = require "util.property"
+local matcher = require "util.matching"
+local version = require "util.version"
 
 local Point = require "util.Point"
 local Rect = require "util.Rect"
 
 local Item = class("Item")
+
+local function getCanvasFormatMatcher()
+  if version >= version{0,9,2} then
+    return "v{'" .. table.concat(love.graphics.getCanvasFormats(), "','") .. "'}"
+  elseif version >= version{0,9,0} then
+    return "v{'normal', 'hdr'}"
+  end
+  return "v{'normal'}"
+end
+
+local function getWrapModeValueMatcher()
+  if version >= version{0,10,0} then
+    return "v{'clamp', 'repeat', 'mirroredrepeat', 'clampzero'}"
+  elseif version >= version{0,9,2} then
+    return "v{'clamp', 'repeat', 'mirroredrepeat'}"
+  end
+  return "v{'clamp', 'repeat'}"
+end
 
 function Item:initialize(tbl)
   property(self, tbl, "x", 0)
@@ -22,6 +42,18 @@ function Item:initialize(tbl)
 
   property(self, tbl, "implicitWidth", 0)
   property(self, tbl, "implicitHeight", 0)
+
+  local filterMatcher = matcher("v{'linear', 'nearest'}")
+  local wm = getWrapModeValueMatcher()
+	property.group(self, tbl, "layer", {
+    enabled = false, format = "normal", msaa = 0,
+    minFilter = "linear", magFilter = "linear", anisotropy = 1,
+    wrapMode = "repeat"
+  }, {
+    format = getCanvasFormatMatcher(), shader = "any(l2t.Shader)",
+    minFilter = filterMatcher, magFilter = filterMatcher,
+    wrapMode = table.concat{"any{", wm,",tbl{", wm, ",", wm, "}}"}
+  })
 
   property(self, tbl, "visible", true)
 
