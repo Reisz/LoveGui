@@ -1,7 +1,13 @@
-local function instanceOfName(class, name)
+local function subclassOfName(class, name)
   if class.name == name then return true end
   if type(class.super) == "table" then return false end
-  return instanceOfName(class.super, name)
+  return subclassOfName(class.super, name)
+end
+
+local function subclassOfNamePt(class, name)
+  if type(string.find(class.name, name)) ~= "nil" then return true end
+  if type(class.super) == "table" then return false end
+  return subclassOfName(class.super, name)
 end
 
 return {
@@ -46,27 +52,47 @@ return {
       return tostring(v) == self[1]
     end
   },
+  ts_pt = {
+    __call = function(self, v)
+      return type(string.find(tostring(v), self[1])) ~= "nil"
+    end
+  },
   c = {
     __call = function(self, v)
       return type(v) == "table"
         and v.name == self[1]
     end
   },
+  c_pt = {
+    __call = function(self, v)
+      return type(v) == "table"
+        and type(string.find(v.name, self[1])) ~= "nil"
+    end
+  },
   o = {
     __call = function(self, v)
       return type(v) == "table"
         and type(v.class) == "table"
-        and instanceOfName(v.class, self[1])
+        and subclassOfName(v.class, self[1])
     end
   },
-  subC = {
+  o_pt = {
     __call = function(self, v)
-      -- TODO
+      return type(v) == "table"
+        and type(v.class) == "table"
+        and subclassOfNamePt(v.class, self[1])
     end
   },
-  supC = {
+  subc = {
     __call = function(self, v)
-      -- TODO
+      return type(v) == "table"
+        and subclassOfName(v, self[1])
+    end
+  },
+  subc_pt = {
+    __call = function(self, v)
+      return type(v) == "table"
+        and subclassOfNamePt(v, self[1])
     end
   },
   l2t = {
