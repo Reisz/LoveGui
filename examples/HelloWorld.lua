@@ -1,4 +1,4 @@
-local rgb = require "util.rgb" ()
+local rgb, rgba = require "util.rgb" ()
 
 local Item = require "components.Item"
 local Text = require "components.Text"
@@ -7,7 +7,7 @@ local ImageFontText = require "components.ImageFontText"
 return Item {
   Text {
     x = 300, y = 200,
-    color = rgb(0,0,255),
+    color = rgba(0,0,255,0.5),
     text = "Hello World!",
     font_size = 35
   },

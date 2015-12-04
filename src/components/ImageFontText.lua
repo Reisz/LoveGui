@@ -18,21 +18,20 @@ end
 
 function ImageFontText:initialize(tbl)
   property(self, tbl, "text", "")
-  property(self, tbl, "color", {0,0,0})
+  property(self, tbl, "color", {0,0,0}, "tbl{t.number, t.number, t.number, may(t.number)}")
 
   property.group(self, tbl, "font", {
     src = "", glyphs = "", extraSpacing = 0
   }, { -- flags
-    src = "_" -- support for all inputs of newImageFont
-    -- TODO improve matcher
+    src = "any{t.string, l2t.Image}"
+    -- support for all inputs of newImageFont
   })
   component.functionBinding(function(font)
     updateFont(self, font)
   end, self.properties.font)()
 
   property(self, tbl, "orientation", 0)
-  property(self, tbl, "scaleX", 1)
-  property(self, tbl, "scaleY", 1)
+  property(self, tbl, "scale", 1, "any{t.number, tbl{t.number, t.number}}")
   property(self, tbl, "offsetX", 0)
   property(self, tbl, "offsetY", 0)
   property(self, tbl, "shearX", 0)
@@ -42,13 +41,16 @@ function ImageFontText:initialize(tbl)
 end
 
 function ImageFontText:draw()
+  local scaleX, scaleY = self.scale, self.scale
+  if type(scaleX) == "table" then
+    scaleX = scaleX[1]
+    scaleY = scaleY[2]
+  end
+
   love.graphics.setColor(self.color)
   love.graphics.setFont(self._font)
-  love.graphics.print(self.text, 0, 0,
-    self.orientation,
-    self.scaleX, self.scaleY,
-    self.offsetX, self.offsetY,
-    self.shearX, self.shearY)
+  love.graphics.print(self.text, 0, 0, self.orientation, scaleX, scaleY,
+    self.offsetX, self.offsetY, self.shearX, self.shearY)
 end
 
 local a, A, d = "abcdefghijklmnopqrstuvwxyz",

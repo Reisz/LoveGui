@@ -13,13 +13,24 @@
 
 local env = require "util.matching.env"
 
-local function matcher(s)
+local function matcher(m)
   if _VERSION == "Lua 5.1" then
-    local chunk = loadstring("return " .. s)
+    local chunk = loadstring("return " .. m)
     return setfenv(chunk, env)()
   else -- Lua 5.2 or higher
-    return load("return " .. s, "matcher", "bt", env)()
+    return load("return " .. m, "matcher", "bt", env)()
   end
 end
 
-return matcher
+local function safeMatcher(m)
+  if getmetatable(m) and getmetatable(m).matcher then
+    return m
+  else
+    local result = matcher(m)
+    if not getmetatable(result) then setmetatable(result, {}) end
+    getmetatable(result).matcher = "true"
+    return result
+  end
+end
+
+return safeMatcher

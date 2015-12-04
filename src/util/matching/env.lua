@@ -4,9 +4,15 @@ local Object = class.Object
 
 local env = { is = {} }
 
+local function usemt_call(name)
+  local mt = metatables[name]
+  local function call(_, value) return setmetatable({value}, mt) end
+  env[name] = setmetatable({}, { __call = call })
+end
+
 local function usemt_call_index(name)
   local mt = metatables[name]
-  local function call_index(self, value) return setmetatable({value}, mt) end
+  local function call_index(_, value) return setmetatable({value}, mt) end
   env[name] = setmetatable({}, { __call = call_index, __index = call_index })
 end
 
@@ -21,11 +27,13 @@ end
 env["_"] = function() return true end
 usemt_list "all"
 usemt_list "any"
+usemt_call "may"
 
 -- lua matchers
 env.t = require "util.matching.type"
 usemt_list "v"
 usemt_list "tbl"
+usemt_call_index "pt"
 usemt_call_index "ts"
 usemt_call_index "tn"
 -- TODO figure out syntax for functions
@@ -37,5 +45,9 @@ usemt_call_index "c"
 usemt_call_index "o"
 usemt_call_index "subC"
 usemt_call_index "supC"
+
+
+-- love2d matchers
+usemt_call_index "l2t"
 
 return env
