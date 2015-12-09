@@ -37,6 +37,7 @@ return {
   },
   tbl = {
     __call = function(self, v)
+      if type(v) ~= "table" then return false end
       for i, v in pairs(v) do if not self[i](v) then return false end end
       return true
     end

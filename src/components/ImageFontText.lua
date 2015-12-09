@@ -1,10 +1,26 @@
 local class = require "util.middleclass"
-local component = require "util.component"
-local property = require "util.property"
 
 local Item = require "components.Item"
 
-local ImageFontText = class("ImageFontText", Item.class)
+local ImageFontText = class("ImageFontText", Item)
+
+ImageFontText.property.text = ""
+ImageFontText.property.color = {0,0,0}
+ImageFontText.property.color:setMatcher("tbl{t.number, t.number, t.number, may(t.number)}")
+
+ImageFontText.property.font = Item.group {
+  src = "", glyphs = "", extraSpacing = 0
+}
+ImageFontText.property.font.src:setMatcher("any{t.string, l2t.Image}") -- support for all inputs of newImageFont
+
+ImageFontText.property.orientation = 0
+ImageFontText.property.scale = 1
+ImageFontText.property.scale:setMatcher("any{t.number, tbl{t.number, t.number}}")
+ImageFontText.property.offsetX = 0
+ImageFontText.property.offsetY = 0
+ImageFontText.property.shearX = 0
+ImageFontText.property.shearY = 0
+
 
 local function updateFont(self, font)
   if love._version_major >= 10 then
@@ -17,27 +33,7 @@ local function updateFont(self, font)
 end
 
 function ImageFontText:initialize(tbl)
-  property(self, tbl, "text", "")
-  property(self, tbl, "color", {0,0,0}, "tbl{t.number, t.number, t.number, may(t.number)}")
-
-  property.group(self, tbl, "font", {
-    src = "", glyphs = "", extraSpacing = 0
-  }, { -- flags
-    src = "any{t.string, l2t.Image}"
-    -- support for all inputs of newImageFont
-  })
-  component.functionBinding(function(font)
-    updateFont(self, font)
-  end, self.properties.font)()
-
-  property(self, tbl, "orientation", 0)
-  property(self, tbl, "scale", 1, "any{t.number, tbl{t.number, t.number}}")
-  property(self, tbl, "offsetX", 0)
-  property(self, tbl, "offsetY", 0)
-  property(self, tbl, "shearX", 0)
-  property(self, tbl, "shearY", 0)
-
-  Item.class.initialize(self, tbl)
+  self.properties.font:bind(function(font) updateFont(self, font) end)()
 end
 
 function ImageFontText:cDraw()
@@ -63,4 +59,4 @@ ImageFontText.static.digits = d
 ImageFontText.static.d = d
 ImageFontText.static.aAd = a .. A .. d
 
-return component(ImageFontText)
+return ImageFontText

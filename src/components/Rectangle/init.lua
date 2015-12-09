@@ -1,26 +1,28 @@
 local class = require "util.middleclass"
-local component = require "util.component"
-local property = require "util.property"
+local matcher = require "util.matching"
 
 local fill = require "components.Rectangle.fill"
 local line = require "components.Rectangle.line"
 
 local Item = require "components.Item"
 
-local Rectangle = class("Rectangle", Item.class)
+local Rectangle = class("Rectangle", Item)
+local colMatcher = matcher("tbl{t.number, t.number, t.number, may(t.number)}")
+
+Rectangle.property.border = Item.group {
+  color = {0, 0, 0}, width = 0
+}
+Rectangle.property.border.color:setMatcher(colMatcher)
+
+Rectangle.property.color = {255, 255, 255}
+Rectangle.property.color:setMatcher(colMatcher)
+-- TODO gradient
+
+Rectangle.property.radius = 0
+Rectangle.property.radiusSegments = 0
 
 function Rectangle:initialize(tbl)
-  property.group(self, tbl, "border", {
-    color = {0, 0, 0},
-    width = 0
-  })
-  property(self, tbl, "color", {255, 255, 255})
-  -- TODO gradient (properties expecting component)
-  property(self, tbl, "radius", 0)
-  property(self, tbl, "radiusSegments", self.radius)
-  component.binding(self, "radiusSegments", self.properties.radius)
-
-  Item.class.initialize(self, tbl)
+  self.properties.radius:bindTo(self, "radiusSegments")()
 end
 
 function Rectangle:cDraw()
@@ -34,4 +36,4 @@ function Rectangle:cDraw()
   end
 end
 
-return component(Rectangle)
+return Rectangle

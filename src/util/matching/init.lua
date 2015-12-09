@@ -13,7 +13,9 @@
 
 local env = require "util.matching.env"
 
-local function matcher(m)
+local matcher = {}
+
+function matcher.getFunction(m)
   if _VERSION == "Lua 5.1" then
     local fn, msg = loadstring("return " .. m)
     if not fn then error(msg) end
@@ -25,15 +27,22 @@ local function matcher(m)
   end
 end
 
-local function safeMatcher(m)
-  if getmetatable(m) and getmetatable(m).matcher then
-    return m
+local matcherId = {}
+function matcher.create(m)
+  local _m, mt = matcher.getFunction(m)
+  if type(_m) == "table" then
+    mt = getmetatable(_m)
   else
-    local result = matcher(m)
-    if not getmetatable(result) then setmetatable(result, {}) end
-    getmetatable(result).matcher = "true"
-    return result
+    mt = { __call = _m }
+    _m = setmetatable({}, mt)
   end
+  mt.__tostring = function() return m end
+  mt[matcherId] = true
+  return _m
 end
 
-return safeMatcher
+function matcher.isMatcher(m)
+  return m and (getmetatable(m) or matcherId)[matcherId]
+end
+
+return setmetatable(matcher, { __call = function(_, ...) return matcher.create(...) end })

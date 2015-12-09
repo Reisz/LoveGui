@@ -25,6 +25,7 @@ end
 
 -- utility matchers
 env["_"] = function() return true end
+env["__"] = function() return false end
 usemt_list "all"
 usemt_list "any"
 usemt_call "may"
