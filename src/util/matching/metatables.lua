@@ -31,15 +31,20 @@ return {
   },
   v = {
     __call = function(self, v)
-      for i = 1, #self do if self[i] == v then return true end end
+      if self[v] then return true end
       return false
     end
   },
   tbl = {
     __call = function(self, v)
       if type(v) ~= "table" then return false end
-      for i, v in pairs(v) do if not self[i](v) then return false end end
+      for i,_v in pairs(v) do if not self[i](_v) then return false end end
       return true
+    end
+  },
+  list = {
+    __call = function(self, v)
+
     end
   },
   pt = {

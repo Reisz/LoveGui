@@ -6,7 +6,7 @@ local env = { is = {} }
 
 local function usemt_call(name)
   local mt = metatables[name]
-  local function call(_, value) return setmetatable({value}, mt) end
+  local function call(_, ...) return setmetatable({...}, mt) end
   env[name] = setmetatable({}, { __call = call })
 end
 
@@ -23,6 +23,15 @@ local function usemt_list(name)
   end
 end
 
+local function usemt_map(name)
+  local mt = metatables[name]
+  env[name] = function(tbl)
+    local result = {}
+    for i = 1, #tbl do result[tbl[i]] = true end
+    return setmetatable(result, mt)
+  end
+end
+
 -- utility matchers
 env["_"] = function() return true end
 env["__"] = function() return false end
@@ -32,11 +41,12 @@ usemt_call "may"
 
 -- lua matchers
 env.t = require "util.matching.type"
-usemt_list "v" -- set of possible values
+usemt_map "v" -- set of possible values
 usemt_list "tbl" -- structure of a table
+usemt_call "list"
 usemt_call_index "pt" -- string matches a pattern
-usemt_call_index "ts_pt" -- tostring matches a pattern
 usemt_call_index "ts" -- tostring equals
+usemt_call_index "ts_pt" -- tostring matches a pattern
 usemt_call_index "tn" -- tonumber equals
 -- functions work implicitly, because global environment is set
 

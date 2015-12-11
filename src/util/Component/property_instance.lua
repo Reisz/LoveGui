@@ -1,10 +1,11 @@
 local propertyInstance = {}
+local e = "Property %s: New value %s did not match criteria."
 
 function propertyInstance:new(tbl, args, canDefault)
   -- manage value and assignment
   local value, v = self.value, args[self.name]
   if v then
-    if not self.matcher(v) then error() end -- TODO msg
+    assert(self.matcher(v), e:format(self.name, v))
     value = v; args[self.name] = nil
   end
 
@@ -25,7 +26,7 @@ function propertyInstance.create(value, matcher)
 end
 
 function propertyInstance:set(value)
-  assert(self.matcher(value)) -- TODO msg
+  assert(self.matcher(value), e:format(self.name, v))
   self:_set(value)
 end
 

@@ -1,4 +1,6 @@
 local propertyInstance = require "util.Component.property_instance"
+local e = "Property %s.%s: New value %s did not match criteria."
+local e_assign = "Ambiguous assignment: Property %s.%s unsing single- and double-assignment."
 
 local groupInstance = {}
 
@@ -44,14 +46,12 @@ function groupInstance:new(tbl, args)
       local qualName = table.concat{name, "_", i}
       local v1, v2 = args[qualName], _group[i]
       if v1 and v2 then
-        error() -- TODO msg
+        error(e_assign:format())
       elseif v2 then v1 = v2 end
 
       -- initial assignment is in v1
       if v1 then
-        if not v.matcher(v1) then
-          error() -- TODO msg
-        end
+        assert(v.matcher(v1), e:format(name, i, v1))
         value = v1
       end
 

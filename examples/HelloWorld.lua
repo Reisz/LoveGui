@@ -4,21 +4,23 @@ local Item = require "components.Item"
 local Text = require "components.Text"
 local ImageFontText = require "components.ImageFontText"
 
+-- TODO font registry
 return Item {
   Text {
-    x = 300, y = 200,
+    x = 200, y = 100,
     color = rgba(0,0,255,0.5),
     text = "Hello World!",
-    font_size = 35
+    font_size = 60
   },
   ImageFontText {
-    x = 340, y = 350,
-    color = rgb(0,0,255),
+    x = 200, y = 250,
+    color = rgb(255,255,0),
     text = "Hello World!",
+    scale = 3,
     font = {
       src = "imagefont.png",
       -- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
       glyphs = " " .. ImageFontText.aAd .. ".,!?-+/():;%&`'*#=[]\""
     }
-  }
+  },
 }
