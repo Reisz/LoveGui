@@ -44,7 +44,21 @@ return {
   },
   list = {
     __call = function(self, v)
+      local matcher, size = self[1], #v
+      local min, max = self[2], self[3]
 
+      if not max then
+        if min and size ~= min then return false end
+      else
+        if min >= 0 and min > size then return false end
+        if max >= 0 and max < size then return false end
+      end
+
+      for i=1, size do
+        if not matcher(v[i]) then return false end
+      end
+      
+      return true
     end
   },
   pt = {

@@ -43,7 +43,7 @@ usemt_call "may"
 env.t = require "util.matching.type"
 usemt_map "v" -- set of possible values
 usemt_list "tbl" -- structure of a table
-usemt_call "list"
+usemt_call "list" -- (matcher, min, max) (min & max == nil -> any length, also empty) (max == nil -> exact size)
 usemt_call_index "pt" -- string matches a pattern
 usemt_call_index "ts" -- tostring equals
 usemt_call_index "ts_pt" -- tostring matches a pattern
