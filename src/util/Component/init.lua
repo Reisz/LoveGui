@@ -33,7 +33,7 @@ function Component:new(tbl)
 
   local klass = self
   while klass.property do
-    for i, v in pairs(klass.property) do
+    for _, v in pairs(klass.property) do
       v(instance.properties, tbl, klass == self)
     end
     klass = klass.super

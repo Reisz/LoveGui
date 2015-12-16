@@ -9,11 +9,14 @@ function propertyInstance:new(tbl, args, canDefault)
     value = v; args[self.name] = nil
   end
 
-  if type(value) == "table" then
+  if value ~= v and type(value) == "table" then
+    print(self.name)
+    local mt = getmetatable(value)
     local _v = value; value = {}
-    for i,v in pairs(_v) do
-      value[i] = v
+    for i, val in pairs(_v) do
+      value[i] = val
     end
+    setmetatable(value, mt)
   end
 
   local prop = propertyInstance.create(value, self.matcher)

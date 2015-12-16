@@ -16,7 +16,7 @@ Rectangle.property.border.color:setMatcher(colMatcher)
 
 Rectangle.property.color = {255, 255, 255}
 Rectangle.property.color:setMatcher(colMatcher)
--- TODO gradient
+Rectangle.property.gradient:setMatcher("may(o.Gradient)")
 
 Rectangle.property.radius = 0
 Rectangle.property.radiusSegments = 0
