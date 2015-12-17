@@ -37,14 +37,14 @@ function groupInstance:new(tbl, args)
   local name = self.name
 
   -- manage values and assignment
-  local _group, values = args[name] or empty, {}
+  local _group, values = args[name] or empty, {}; args[name] = nil
   for i, v in pairs(self) do
     if i ~= "name" then
       local value = v.value
 
       -- 2 types of initial assignment
       local qualName = table.concat{name, "_", i}
-      local v1, v2 = args[qualName], _group[i]
+      local v1, v2 = args[qualName], _group[i]; args[qualName] = nil
       if v1 and v2 then
         error(e_assign:format())
       elseif v2 then v1 = v2 end

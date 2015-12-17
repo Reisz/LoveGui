@@ -10,7 +10,6 @@ function propertyInstance:new(tbl, args, canDefault)
   end
 
   if value ~= v and type(value) == "table" then
-    print(self.name)
     local mt = getmetatable(value)
     local _v = value; value = {}
     for i, val in pairs(_v) do
@@ -29,7 +28,7 @@ function propertyInstance.create(value, matcher)
 end
 
 function propertyInstance:set(value)
-  assert(self.matcher(value), e:format(self.name, v))
+  assert(self.matcher(value), e:format(self.name, value))
   self:_set(value)
 end
 

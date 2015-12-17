@@ -26,8 +26,10 @@ function Rectangle:initialize(tbl)
 end
 
 function Rectangle:cDraw()
+  if self.gradient then self.gradient:prepare(self.width, self.height) end
   love.graphics.setColor(self.color)
   fill(self.width, self.height, self.radius, self.radiusSegments)
+  if self.gradient then self.gradient:apply(self.width, self.height) end
 
   if self.border.width > 0 then
     love.graphics.setColor(self.border.color)

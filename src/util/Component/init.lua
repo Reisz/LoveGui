@@ -47,6 +47,16 @@ function Component:new(tbl)
     end
   end
 
+  local err = {}
+  for i in pairs(tbl) do
+    if type(i) ~= "number" then
+      table.insert(err, i)
+    end
+  end
+  if #err > 0 then
+    error(("Unknown properties: %s"):format(table.concat(err, ", ")))
+  end
+
   instance:initialize()
   return instance
 end
