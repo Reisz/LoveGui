@@ -10,9 +10,12 @@ Text.property.text = ""
 Text.property.baseUrl = ""
 
 Text.property.font = Item.group {
-  family = "", size = 12,
+  family = "", size = 12, minFilter = "linear", magFilter = "linear", anisotropy = 1,
   bold = false, italic = false, strikeout = false, underline = false
 }
+local filterMatcher = matcher("v{'linear', 'nearest'}")
+Text.property.font.minFilter:setMatcher(filterMatcher)
+Text.property.font.magFilter:setMatcher(filterMatcher)
 
 Text.property.lineHeight = 1.0
 
@@ -41,6 +44,14 @@ function Text:initialize(tbl)
       self._font = love.graphics.newFont(font.size)
     end
   end)()
+  local function updateFilter()
+    if self._font then
+      self._font:setFilter(self.font.minFilter, self.font.magFilter, self.font.anisotropy)
+    end
+  end
+  self.properties.font.minFilter:bind(updateFilter)
+  self.properties.font.magFilter:bind(updateFilter)
+  self.properties.font.anisotropy:bind(updateFilter)()
 end
 
 function Text:cDraw()

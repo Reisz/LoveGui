@@ -1,4 +1,5 @@
 local class = require "util.middleclass"
+local matcher = require "util.matching"
 
 local Item = require "components.Item"
 
@@ -9,9 +10,13 @@ ImageFontText.property.color = {0,0,0}
 ImageFontText.property.color:setMatcher("tbl{t.number, t.number, t.number, may(t.number)}")
 
 ImageFontText.property.font = Item.group {
-  src = "", glyphs = "", extraSpacing = 0
+  src = "", glyphs = "", extraSpacing = 0,
+  minFilter = "linear", magFilter = "linear", anisotropy = 1
 }
 ImageFontText.property.font.src:setMatcher("any{t.string, l2t.Image}") -- support for all inputs of newImageFont
+local filterMatcher = matcher("v{'linear', 'nearest'}")
+ImageFontText.property.font.minFilter:setMatcher(filterMatcher)
+ImageFontText.property.font.magFilter:setMatcher(filterMatcher)
 
 ImageFontText.property.orientation = 0
 ImageFontText.property.scale = 1
@@ -34,6 +39,14 @@ end
 
 function ImageFontText:initialize(tbl)
   self.properties.font:bind(function(font) updateFont(self, font) end)()
+  local function updateFilter()
+    if self._font then
+      self._font:setFilter(self.font.minFilter, self.font.magFilter, self.font.anisotropy)
+    end
+  end
+  self.properties.font.minFilter:bind(updateFilter)
+  self.properties.font.magFilter:bind(updateFilter)
+  self.properties.font.anisotropy:bind(updateFilter)()
 end
 
 function ImageFontText:cDraw()

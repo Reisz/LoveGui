@@ -28,7 +28,8 @@ return Item {
     text = "x = 20 + [19 * 37! - (46 / 58)]",
     font = {
       src = "Image Font 1.png",
-      glyphs = if1glyphs
+      glyphs = if1glyphs,
+      minFilter = "nearest", magFilter = "nearest"
     }
   },
   ImageFontText {
@@ -53,7 +54,8 @@ return Item {
     ]=],
     font = {
       src = "Image Font 1.png",
-      glyphs = if1glyphs
+      glyphs = if1glyphs,
+      minFilter = "nearest", magFilter = "nearest"
     }
   }
 }

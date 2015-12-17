@@ -20,7 +20,8 @@ return Item {
     font = {
       src = "imagefont.png",
       -- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
-      glyphs = " " .. ImageFontText.aAd .. ".,!?-+/():;%&`'*#=[]\""
+      glyphs = " " .. ImageFontText.aAd .. ".,!?-+/():;%&`'*#=[]\"",
+      minFilter = "nearest", magFilter = "nearest"
     }
   },
 }
