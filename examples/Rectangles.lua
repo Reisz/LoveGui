@@ -54,14 +54,14 @@ return Item {
         {pos = 0, color = rgba(0, 0, 255, 0.2)},
         {pos = 1, color = rgba(0, 0, 255, 0.8)},
       },
-      radius = 10
+      radius = 10,
     },
     Rectangle {
       x = 50, y = 50,
       width = 100, height = 100,
       color = rgb(255,0,0),
       radius = 10,
-      radiusSegments = 1
+      radiusSegments = 1,
     },
   },
   Rectangle {
