@@ -7,9 +7,9 @@ local Text = require "components.Text"
 local FontEntry = require "util.Font.Entry"
 local FontObject = require "util.Font.Object"
 local if1Entry = FontEntry()
-if1Entry:addVariant(
-  FontObject(love.graphics.newImageFont("Image Font 1.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")),
-  17, 50, false);
+local if1 = love.graphics.newImageFont("Image Font 1.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
+if1:setFilter("linear", "nearest")
+if1Entry:addVariant(FontObject(if1), 17, 50, false);
 (require "util.Font.Registry").add("if1", if1Entry)
 
 
@@ -24,16 +24,13 @@ return Item {
       WELCH FIESER KATZENTYP QUÄLT DA SÜSSE VÖGEL BLOß ZUM JUX?
       Asynchrone Bassklänge vom Jazzquintett sind nix für spießige Löwen.
     ]],
-    font_family = "if1"
+    font_family = "if1", font_size = 18
   },
   Text {
     x = 150, y = 180,
     color = rgb(177,0,177),
-    scale = 3,
     text = "x = 20 + [19 * 37! - (46 / 58)]",
-    font = {
-      family = "if1", minFilter = "nearest", magFilter = "nearest"
-    }
+    font = { family = "if1", size = 50 }
   },
   Text {
     x = 200, y = 270,
@@ -55,8 +52,6 @@ return Item {
         print(string.sub(string1, 2, 3))
       ```
     ]=],
-    font = {
-      family = "if1", minFilter = "nearest", magFilter = "nearest"
-    }
+    font = { family = "if1", size = 16, }
   }
 }

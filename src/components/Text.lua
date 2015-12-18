@@ -11,12 +11,12 @@ Text.property.text = ""
 Text.property.baseUrl = ""
 
 Text.property.font = Item.group {
-  family = "", size = 12, minFilter = "linear", magFilter = "linear", anisotropy = 1,
-  bold = false, italic = false, strikeout = false, underline = false
+  family = "", size = 12, bold = false, italic = false, strikeout = false, underline = false
 }
-local filterMatcher = matcher("v{'linear', 'nearest'}")
+local filterMatcher = matcher("may(v{'linear', 'nearest'})")
 Text.property.font.minFilter:setMatcher(filterMatcher)
 Text.property.font.magFilter:setMatcher(filterMatcher)
+Text.property.font.anisotropy:setMatcher("may(t.number)")
 
 -- TODO find better solution
 Text.property.orientation = 0
@@ -48,12 +48,12 @@ Text.property.verticalAlignment:setMatcher("v{'top', 'center', 'bottom'}")
 function Text:initialize()
   Item.initialize(self)
   self._font = Font(self.font.family, self.font.size,self.font.bold and 75 or 50, self.font.italic)
-  self.properties.font.family:bind(function(f) self._font:setFamily(f) end)
-  self.properties.font.bold:bind(function(b) self._font:setWeight(b and 75 or 50) end)
-  self.properties.font.italic:bind(function(i) self._font:setItalic(i) end)
-  self.properties.font.minFilter:bindTo(self._font, "minFilter")()
-  self.properties.font.magFilter:bindTo(self._font, "magFilter")()
-  self.properties.font.anisotropy:bindTo(self._font, "anisotropy")()
+  self.properties.font.family:bind(function(v) self._font:setFamily(v) end)
+  self.properties.font.bold:bind(function(v) self._font:setWeight(v and 75 or 50) end)
+  self.properties.font.italic:bind(function(v) self._font:setItalic(v) end)
+  self.properties.font.minFilter:bindTo(self._font.filter, "minFilter")()
+  self.properties.font.magFilter:bindTo(self._font.filter, "magFilter")()
+  self.properties.font.anisotropy:bindTo(self._font.filter, "anisotropy")()
 end
 
 function Text:cDraw()

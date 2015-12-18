@@ -2,24 +2,29 @@ local class = require "util.middleclass"
 
 local FontObject = class("FontObject")
 
---- @param font [Font, ImageFont, FontData]
+--- @param font [Font, FontData]
 function FontObject:initialize(font, size)
   if font:typeOf("FontData") then
     self.font = love.graphics.newFont(font, size)
   else
     self.font = font
-    -- TODO scale?
   end
 end
 
-function FontObject:print(text, x, y, r, sx, sy, kx, ky)
+function FontObject:_print(text, method, filter, ...)
   love.graphics.setFont(self.font)
-  love.graphics.print(text, x, y, r, sx, sy, kx, ky)
+  local mif, maf, ani = self.font:getFilter()
+  self.font:setFilter(filter.minFilter or mif, filter.magFilter or maf, filter.anisotropy or ani)
+  love.graphics[method](text, ...)
+  self.font:setFilter(mif, maf, ani)
 end
 
-function FontObject:printf(text, x, v, limit, align, r, sx, sy, kx, ky)
-  love.graphics.setFont(self.font)
-  love.graphics.print(text, x, v, limit, align, r, sx, sy, kx, ky)
+function FontObject:print(text, filter, x, y, r, sx, sy, kx, ky)
+  self:_print(text, "print", filter, x, y, r, sx, sy, kx, ky)
+end
+
+function FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky)
+  self:_print(text, "printf", filter, x, v, limit, align, r, sx, sy, kx, ky)
 end
 
 function FontObject:getFilter()
@@ -28,6 +33,14 @@ end
 
 function FontObject:setFilter(minFilter, magFilter, anisotropy)
   self.font:setFilter(minFilter, magFilter, anisotropy)
+end
+
+function FontObject:getWidth(text)
+  return self.font:getWidth(text)
+end
+
+function FontObject:getHeight()
+  return self.font:getHeight()
 end
 
 return FontObject

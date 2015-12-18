@@ -27,12 +27,14 @@ function Font:initialize(family, size, weight, italic)
 
   self.kerning = true
   self.ligatures = true
+
+  self.filter = {}
 end
 
 function Font:requery()
   self.fontObject, self.exactMatch =
     FontRegistry.find(self.family, self.size, self.weight, self.italic)
-  self.minFilter, self.magFilter, self.anisotropy = self.fontObject:getFilter()
+  self.scaleFactor = self.size / self.fontObject:getHeight()
 end
 
 --- @property family [string]
@@ -141,44 +143,46 @@ end
 --- @property minFilter [string]
 --- @read minFilter
 function Font:minFilter()
-  return self.minFilter
+  return self.filter.minFilter
 end
 --- @write minFilter
 function Font:setMinFilter(mf)
   assert(type(mf) == "string")
-  self.minFilter = mf
+  self.filter.minFilter = mf
 end
 
 --- @property magFilter [string]
 --- @read magFilter
 function Font:magFilter()
-  return self.magFilter
+  return self.filter.magFilter
 end
 --- @write magFilter
 function Font:setMagFilter(mf)
   assert(type(mf) == "string")
-  self.magFilter = mf
+  self.filter.magFilter = mf
 end
 
 --- @property anisotropy [number] (1)
 --- @read anisotropy
 function Font:anisotropy()
-  return self.anisotropy
+  return self.filter.anisotropy
 end
 --- @write anisotropy
 function Font:setAnisotropy(a)
   assert(type(a) == "number")
-  self.anisotropy = a
+  self.filter.anisotropy = a
 end
 
 function Font:print(text, x, y, r, sx, sy, kx, ky)
-  self.fontObject:setFilter(self.minFilter, self.magFilter, self.anisotropy)
-  self.fontObject:print(text, x, y, r, sx, sy, kx, ky)
+  r, sx, sy = r or 0, sx or 1, sy or 1
+  sx, sy = sx * self.scaleFactor, sy * self.scaleFactor
+  self.fontObject:print(text, self.filter, x, y, r, sx, sy, kx, ky)
 end
 
 function Font:printf(text, x, v, limit, align, r, sx, sy, kx, ky)
-  self.fontObject:setFilter(self.minFilter, self.magFilter, self.anisotropy)
-  self.fontObject:printf(text, x, v, limit, align, r, sx, sy, kx, ky)
+  r, sx, sy = r or 0, sx or 1, sy or 1
+  sx, sy = sx * self.scaleFactor, sy * self.scaleFactor
+  self.fontObject:printf(text, self.filter, x, v, limit, align, r, sx, sy, kx, ky)
 end
 
 return Font
