@@ -48,4 +48,17 @@ function FontObject:getSize()
   return self.size
 end
 
+local a, A, d = "abcdefghijklmnopqrstuvwxyz",
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "0123456789"
+FontObject.static.alphabet = a
+FontObject.static.a = a
+FontObject.static.ALPHABET = A
+FontObject.static.A = A
+FontObject.static.digits = d
+FontObject.static.d = d
+FontObject.static.space = " "
+FontObject.static.s = " "
+FontObject.static.saAd = " " .. a .. A .. d
+-- TODO dynamic combinations via __index
+
 return FontObject

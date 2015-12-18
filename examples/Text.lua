@@ -3,16 +3,6 @@ local rgb = require "util.rgb" ()
 local Item = require "components.Item"
 local Text = require "components.Text"
 
---- TODO simplify, maybe load a folder "fonts"
-local FontEntry = require "util.Font.Entry"
-local FontObject = require "util.Font.Object"
-local if1Entry = FontEntry()
-local if1 = love.graphics.newImageFont("Image Font 1.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
-if1:setFilter("linear", "nearest")
-if1Entry:addVariant(FontObject(if1, 18), 18, 50, false);
-(require "util.Font.Registry").add("if1", if1Entry)
-
-
 return Item {
   Text {
     x = 180, y = 50,

@@ -8,16 +8,16 @@ function FontEntry:initialize()
   self.variants, self.dataVariants = {}, {}
 end
 
-function FontEntry:addVariant(fontObject, size, weight, italic)
-  table.insert(self.variants, {
-    object = fontObject, size = size, weight = weight, italic = italic
-  })
-end
-
-function FontEntry:addFontDataVariant(fontData, weight, italic)
-  table.insert(self.dataVariants, {
-    data = fontData, weight = weight, italic = italic
-  })
+function FontEntry:addVariant(object, weight, italic)
+  if FontObject.isInstanceOf(object, FontObject) then
+    table.insert(self.variants, {
+      object = object, size = object:getSize(), weight = weight, italic = italic
+    })
+  else
+    table.insert(self.dataVariants, {
+      data = object, weight = weight, italic = italic
+    })
+  end
 end
 
 function FontEntry:combineWith(other)
