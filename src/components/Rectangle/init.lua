@@ -21,21 +21,27 @@ Rectangle.property.gradient:setMatcher("may(o.Gradient)")
 Rectangle.property.radius = 0
 Rectangle.property.radiusSegments = 0
 
-function Rectangle:initialize(tbl)
+function Rectangle:initialize()
+  Item.initialize(self)
   self.properties.radius:bindTo(self, "radiusSegments")()
 end
 
 function Rectangle:cDraw()
+  -- fill (with gradient)
   if self.gradient then self.gradient:prepare(self.width, self.height) end
   love.graphics.setColor(self.color)
   fill(self.width, self.height, self.radius, self.radiusSegments)
   if self.gradient then self.gradient:apply(self.width, self.height) end
 
+  -- border
   if self.border.width > 0 then
     love.graphics.setColor(self.border.color)
     love.graphics.setLineWidth(self.border.width)
     line(self.width, self.height, self.radius, self.radiusSegments)
   end
+
+  -- children
+  Item.cDraw(self)
 end
 
 return Rectangle

@@ -32,7 +32,7 @@ Item.property.layer.magFilter:setMatcher(filterMatcher)
 
 Item.property.visible = true
 
-Item.property.children = Component.default({})
+Item.property.children = Component.default{}
 
 function Item:initialize()
   self.rect = Rect(0, 0, 0, 0)
@@ -40,7 +40,6 @@ function Item:initialize()
   self.properties.y:bindTo(self.rect, "y")()
   self.properties.width:bindTo(self.rect, "width")()
   self.properties.height:bindTo(self.rect, "height")()
-
 end
 
 function Item:draw()

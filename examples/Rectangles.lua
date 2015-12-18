@@ -21,8 +21,16 @@ return Item {
       color = rgb(255,0,0)
     },
   },
-  Item {
+  Rectangle {
     x = 450, y = 150,
+    width = 100, height = 100,
+    gradient = Gradient {
+      type = "radial",
+      {pos = 0, color = rgb(177, 0, 177)},
+      {pos = 0.8, color = rgb(0, 0, 255)},
+    },
+    border_width = 2,
+    border_color = rgb(0,0,75),
     Rectangle {
       x = 50, y = 50,
       width = 100, height = 100,
@@ -33,18 +41,7 @@ return Item {
       border = {
         width = 2,
         color = rgb(75,0,0)
-      }
-    },
-    Rectangle {
-      x = 0, y = 0,
-      width = 100, height = 100,
-      gradient = Gradient {
-        type = "radial",
-        {pos = 0, color = rgb(177, 0, 177)},
-        {pos = 0.8, color = rgb(0, 0, 255)},
       },
-      border_width = 2,
-      border_color = rgb(0,0,75)
     },
   },
   Item {
@@ -67,8 +64,17 @@ return Item {
       radiusSegments = 1
     },
   },
-  Item {
+  Rectangle {
     x = 450, y = 350,
+    width = 100, height = 100,
+    gradient = Gradient {
+      type = "radial",
+      {pos = 0, color = rgb(177, 0, 177)},
+      {pos = 0.8, color = rgb(0, 0, 255)},
+    },
+    border_width = 2,
+    border_color = rgb(0,0,75),
+    radius = 10,
     Rectangle {
       x = 50, y = 50,
       width = 100, height = 100,
@@ -81,19 +87,7 @@ return Item {
         color = rgb(75,0,0)
       },
       radius = 10,
-      radiusSegments = 1
-    },
-    Rectangle {
-      x = 0, y = 0,
-      width = 100, height = 100,
-      gradient = Gradient {
-        type = "radial",
-        {pos = 0, color = rgb(177, 0, 177)},
-        {pos = 0.8, color = rgb(0, 0, 255)},
-      },
-      border_width = 2,
-      border_color = rgb(0,0,75),
-      radius = 10
+      radiusSegments = 1,
     },
   },
 }

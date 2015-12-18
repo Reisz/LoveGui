@@ -1,3 +1,4 @@
+--- DEPRECATED will use central font registry accessed by Component Text
 local class = require "util.middleclass"
 local matcher = require "util.matching"
 

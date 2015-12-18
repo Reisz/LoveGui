@@ -35,7 +35,8 @@ Text.property.horizontalAlignment:setMatcher("v{'left', 'right', 'center', 'just
 Text.property.verticalAlignment = "top"
 Text.property.verticalAlignment:setMatcher("v{'top', 'center', 'bottom'}")
 
-function Text:initialize(tbl)
+function Text:initialize()
+  Item.initialize(self)
   self.properties.font:bind(function(font)
     if font.family ~= "" then
       -- TODO font family / font style

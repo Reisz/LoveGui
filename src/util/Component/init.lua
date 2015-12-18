@@ -34,7 +34,7 @@ function Component:new(tbl)
   local klass = self
   while klass.property do
     for _, v in pairs(klass.property) do
-      v(instance.properties, tbl, klass == self)
+      v(instance.properties, tbl, type(instance.properties.default) == "nil")
     end
     klass = klass.super
   end
