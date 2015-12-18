@@ -1,12 +1,20 @@
 local rgb = require "util.rgb" ()
 
 local Item = require "components.Item"
-local ImageFontText = require "components.ImageFontText"
+local Text = require "components.Text"
 
-local if1glyphs = " " .. ImageFontText.aAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß"
+--- TODO simplify, maybe load a folder "fonts"
+local FontEntry = require "util.Font.Entry"
+local FontObject = require "util.Font.Object"
+local if1Entry = FontEntry()
+if1Entry:addVariant(
+  FontObject(love.graphics.newImageFont("Image Font 1.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")),
+  17, 50, false);
+(require "util.Font.Registry").add("if1", if1Entry)
+
 
 return Item {
-  ImageFontText {
+  Text {
     x = 180, y = 50,
     color = rgb(255,0,0),
     text = [[
@@ -16,23 +24,18 @@ return Item {
       WELCH FIESER KATZENTYP QUÄLT DA SÜSSE VÖGEL BLOß ZUM JUX?
       Asynchrone Bassklänge vom Jazzquintett sind nix für spießige Löwen.
     ]],
-    font = {
-      src = "Image Font 1.png",
-      glyphs = if1glyphs
-    }
+    font_family = "if1"
   },
-  ImageFontText {
+  Text {
     x = 150, y = 180,
     color = rgb(177,0,177),
     scale = 3,
     text = "x = 20 + [19 * 37! - (46 / 58)]",
     font = {
-      src = "Image Font 1.png",
-      glyphs = if1glyphs,
-      minFilter = "nearest", magFilter = "nearest"
+      family = "if1", minFilter = "nearest", magFilter = "nearest"
     }
   },
-  ImageFontText {
+  Text {
     x = 200, y = 270,
     color = rgb(0,177,177),
     text = [=[
@@ -53,9 +56,7 @@ return Item {
       ```
     ]=],
     font = {
-      src = "Image Font 1.png",
-      glyphs = if1glyphs,
-      minFilter = "nearest", magFilter = "nearest"
+      family = "if1", minFilter = "nearest", magFilter = "nearest"
     }
   }
 }
