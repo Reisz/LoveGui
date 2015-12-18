@@ -1,32 +1,37 @@
 package.path = "?.lua;?/init.lua;../src/?.lua;../src/?/init.lua"
-local examples = {}
-examples.h = require "HelloWorld"
-examples.t = require "Text"
-examples.r = require "Rectangles"
+local examples = { ["h"] = 1, ["t"] = 2, ["r"] = 3}
 
-local currentExample = "h"
+local Item = require "components.Item"
+local Rectangle = require "components.Rectangle"
+local Text = require "components.Text"
+local Swap = require "components.Swap"
 
-local helpFont, textWidth
-local text = "Press to switch: [H] Hello World  [T] Text  [R] Rectangles"
+local item = Item {
+  Rectangle {
+    width = 500, height = 16,
+    color = {0, 0, 0, 50},
+    Text {
+      text = "Press to switch: [H] Hello World  [T] Text  [R] Rectangles",
+    }
+  },
+  Swap {
+    (require "HelloWorld"),
+    (require "Text"),
+    (require "Rectangles")
+  }
+}
 
 function love.load()
-  helpFont = love.graphics.newFont(12)
-  textWidth = helpFont:getWidth(text)
   love.graphics.setBackgroundColor(255, 255, 255)
 end
 
 
 function love.draw()
-  examples[currentExample]:draw()
-  love.graphics.setColor(0, 0, 0, 50)
-  love.graphics.rectangle("fill", 0, 0, textWidth + 10, helpFont:getHeight() + 4)
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.setFont(helpFont)
-  love.graphics.print(text, 5, 2)
+  item:draw()
 end
 
 function love.textinput(t)
   if examples[t] then
-    currentExample = t
+    item.children[2].index = examples[t]
   end
 end

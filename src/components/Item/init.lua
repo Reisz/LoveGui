@@ -44,17 +44,16 @@ end
 
 function Item:draw()
   if not self.visible then return end
+  love.graphics.push()
+  love.graphics.translate(self.x, self.y)
   self:cDraw()
+  love.graphics.pop()
 end
 
 function Item:cDraw()
   local children = self.children
   for i = #children, 1, -1 do
-    local c = children[i]
-    love.graphics.push()
-    love.graphics.translate(c.x, c.y)
-    c:cDraw()
-    love.graphics.pop()
+    children[i]:draw()
   end
 end
 
