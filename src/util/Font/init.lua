@@ -34,7 +34,7 @@ end
 function Font:requery()
   self.fontObject, self.exactMatch =
     FontRegistry.find(self.family, self.size, self.weight, self.italic)
-  self.scaleFactor = self.size / self.fontObject:getHeight()
+  self.scaleFactor = self.size / self.fontObject:getSize()
 end
 
 --- @property family [string]

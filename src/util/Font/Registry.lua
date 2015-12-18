@@ -12,7 +12,7 @@ local FontRegistry = { fonts = {}, sizes = {
 
 function FontRegistry.find(family, size, weight, italic)
   if family == "" then
-    return FontObject(love.graphics.newFont(size)), weight == 50 and italic == false
+    return FontObject(love.graphics.newFont(size), size), weight == 50 and italic == false
   end
 
   local fontEntry = FontRegistry.fonts[family]
@@ -20,7 +20,7 @@ function FontRegistry.find(family, size, weight, italic)
     return fontEntry:get(size, weight, italic)
   else
     -- TODO system font finder
-    return FontObject(love.graphics.newFont(size)), false
+    return FontObject(love.graphics.newFont(size), size), false
   end
 end
 

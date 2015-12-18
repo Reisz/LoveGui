@@ -9,6 +9,7 @@ function FontObject:initialize(font, size)
   else
     self.font = font
   end
+  self.size = size
 end
 
 function FontObject:_print(text, method, filter, ...)
@@ -41,6 +42,10 @@ end
 
 function FontObject:getHeight()
   return self.font:getHeight()
+end
+
+function FontObject:getSize()
+  return self.size
 end
 
 return FontObject

@@ -9,7 +9,7 @@ local FontObject = require "util.Font.Object"
 local if1Entry = FontEntry()
 local if1 = love.graphics.newImageFont("Image Font 1.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
 if1:setFilter("linear", "nearest")
-if1Entry:addVariant(FontObject(if1), 17, 50, false);
+if1Entry:addVariant(FontObject(if1, 18), 18, 50, false);
 (require "util.Font.Registry").add("if1", if1Entry)
 
 
