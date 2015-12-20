@@ -2,23 +2,23 @@ local class = require "util.middleclass"
 local Component = require "util.Component"
 
 local straightShader = love.graphics.newShader [[
-  extern Image buffer;
+  extern Image gradient;
   extern vec2 direction;
 
   vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-    vec4 result = Texel(buffer, vec2(dot(texture_coords, direction), 0));
+    vec4 result = Texel(gradient, vec2(dot(texture_coords, direction), 0));
     result.a *= Texel(texture, texture_coords).a * color.a;
     return result;
   }
 ]]
 
 local radialShader = love.graphics.newShader [[
-  extern Image buffer;
+  extern Image gradient;
   //extern vec2 center;
 
   vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     vec2 center = vec2(0.5, 0.5);
-    vec4 result = Texel(buffer, vec2(length(texture_coords - center), 0));
+    vec4 result = Texel(gradient, vec2(length(texture_coords - center), 0));
     result.a *= Texel(texture, texture_coords).a * color.a;
     return result;
   }
@@ -110,7 +110,7 @@ function Gradient:apply(width, height)
   end
 
   if self.cache ~= length then self.buffer = self:generate(length) end
-  shader:send("buffer", self.buffer)
+  shader:send("gradient", self.buffer)
 
   local otherShader = love.graphics.getShader()
   love.graphics.setCanvas(self.otherCanvas)
