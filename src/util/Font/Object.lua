@@ -12,7 +12,18 @@ function FontObject:initialize(font, size)
   self.size = size
 end
 
-function FontObject:_print(text, method, filter, ...)
+function FontObject:getAscent() return self.font:getAscent() end
+function FontObject:getBaseline() return self.font:getBaseline() end
+function FontObject:getDescent() return self.font:getDescent() end
+
+function FontObject:getFilter()
+  return self.font:getFilter()
+end
+function FontObject:setFilter(minFilter, magFilter, anisotropy)
+  self.font:setFilter(minFilter, magFilter, anisotropy)
+end
+
+local function _print(self, text, method, filter, ...)
   love.graphics.setFont(self.font)
   local mif, maf, ani = self.font:getFilter()
   self.font:setFilter(filter.minFilter or mif, filter.magFilter or maf, filter.anisotropy or ani)
@@ -21,19 +32,11 @@ function FontObject:_print(text, method, filter, ...)
 end
 
 function FontObject:print(text, filter, x, y, r, sx, sy, kx, ky)
-  self:_print(text, "print", filter, x, y, r, sx, sy, kx, ky)
+  _print(self, text, "print", filter, x, y, r, sx, sy, kx, ky)
 end
 
 function FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky)
-  self:_print(text, "printf", filter, x, v, limit, align, r, sx, sy, kx, ky)
-end
-
-function FontObject:getFilter()
-  return self.font:getFilter()
-end
-
-function FontObject:setFilter(minFilter, magFilter, anisotropy)
-  self.font:setFilter(minFilter, magFilter, anisotropy)
+  _print(self, text, "printf", filter, x, v, limit, align, r, sx, sy, kx, ky)
 end
 
 function FontObject:getWidth(text)
@@ -48,17 +51,20 @@ function FontObject:getSize()
   return self.size
 end
 
-local a, A, d = "abcdefghijklmnopqrstuvwxyz",
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "0123456789"
-FontObject.static.alphabet = a
-FontObject.static.a = a
-FontObject.static.ALPHABET = A
-FontObject.static.A = A
-FontObject.static.digits = d
-FontObject.static.d = d
-FontObject.static.space = " "
-FontObject.static.s = " "
-FontObject.static.saAd = " " .. a .. A .. d
--- TODO dynamic combinations via __index
+local glyphsets = {
+  a = "abcdefghijklmnopqrstuvwxyz",
+  A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  d = "0123456789",
+  s = " "
+}
+FontObject.static.glyphs = setmetatable({}, {
+  __index = function(_, key)
+    local result = {}
+    for c in string.gmatch(key, ".") do
+      table.insert(result, glyphsets[c])
+    end
+    return table.concat(result)
+  end, __newindex = function() end
+})
 
 return FontObject

@@ -11,11 +11,11 @@ local FontEntry = require "util.Font.Entry"
 local FontObject = require "util.Font.Object"
 local tutorialEntry = FontEntry()
 -- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
-local tutorial = love.graphics.newImageFont("imagefont.png", FontObject.saAd .. ".,!?-+/():;%&`'*#=[]\"")
+local tutorial = love.graphics.newImageFont("imagefont.png", FontObject.glyphs.saAd .. ".,!?-+/():;%&`'*#=[]\"")
 tutorialEntry:addVariant(FontObject(tutorial, 17), 50, false);
 (require "util.Font.Registry").add("tutorial", tutorialEntry)
 local if1Entry = FontEntry()
-local if1 = love.graphics.newImageFont("Image Font 1.png", FontObject.saAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
+local if1 = love.graphics.newImageFont("Image Font 1.png", FontObject.glyphs.saAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
 if1:setFilter("linear", "nearest")
 if1Entry:addVariant(FontObject(if1, 18), 50, false);
 (require "util.Font.Registry").add("if1", if1Entry)
