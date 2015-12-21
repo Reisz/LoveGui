@@ -2,12 +2,12 @@ local class = require "util.middleclass"
 
 local FontObject = class("FontObject")
 
---- @param font [Font, FontData]
+--- @param font [Font, Data]
 function FontObject:initialize(font, size)
-  if font:typeOf("FontData") then
-    self.font = love.graphics.newFont(font, size)
-  else
+  if font:typeOf("Font") then
     self.font = font
+  else
+    self.font = love.graphics.newFont(font, size)
   end
   self.size = size
 end
@@ -51,20 +51,6 @@ function FontObject:getSize()
   return self.size
 end
 
-local glyphsets = {
-  a = "abcdefghijklmnopqrstuvwxyz",
-  A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  d = "0123456789",
-  s = " "
-}
-FontObject.static.glyphs = setmetatable({}, {
-  __index = function(_, key)
-    local result = {}
-    for c in string.gmatch(key, ".") do
-      table.insert(result, glyphsets[c])
-    end
-    return table.concat(result)
-  end, __newindex = function() end
-})
+FontObject.static.glyphs = require "util.Font.glyphs"
 
 return FontObject

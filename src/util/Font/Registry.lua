@@ -34,6 +34,10 @@ function FontRegistry.add(family, entry)
   end
 end
 
+function FontRegistry.getEntry(family)
+  return FontRegistry.fonts[family]
+end
+
 -- TODO load fonts at startup
 
 return FontRegistry

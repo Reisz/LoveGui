@@ -8,17 +8,22 @@ local Swap = require "components.Swap"
 
 --- TODO simplify, maybe load a folder "fonts"
 local FontEntry = require "util.Font.Entry"
-local FontObject = require "util.Font.Object"
-local tutorialEntry = FontEntry()
 -- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
-local tutorial = love.graphics.newImageFont("imagefont.png", FontObject.glyphs.saAd .. ".,!?-+/():;%&`'*#=[]\"")
-tutorialEntry:addVariant(FontObject(tutorial, 17), 50, false);
-(require "util.Font.Registry").add("tutorial", tutorialEntry)
-local if1Entry = FontEntry()
-local if1 = love.graphics.newImageFont("Image Font 1.png", FontObject.glyphs.saAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß")
-if1:setFilter("linear", "nearest")
-if1Entry:addVariant(FontObject(if1, 18), 50, false);
-(require "util.Font.Registry").add("if1", if1Entry)
+FontEntry("tutorial"):add {
+  type = "image", file = "imagefont.png",
+  glyphs = FontEntry.glyphs.saAd .. ".,!?-+/():;%&`'*#=[]\"",
+  size = 17, weight = 50, italic = false
+}
+-- Lobster from http://google.com/fonts
+FontEntry("lobster"):add {
+  type = "data", file = "Lobster-Regular.ttf",
+  weight = 50, italic = false
+}
+FontEntry("if1"):add {
+  type = "image", file = "Image Font 1.png",
+  glyphs = FontEntry.glyphs.saAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß",
+  size = 18, weight = 50, italic = false, minFilter = "linear", magFilter = "nearest"
+}
 
 local item = MainItem {
   background = {255, 255, 255},

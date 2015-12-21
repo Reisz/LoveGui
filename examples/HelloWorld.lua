@@ -11,7 +11,13 @@ return Item {
     font_size = 60
   },
   Text {
-    x = 150, y = 250,
+    x = 230, y = 200,
+    color = rgb(0,0,255),
+    text = "Hello World!",
+    font_family = "lobster", font_size = 60
+  },
+  Text {
+    x = 150, y = 300,
     color = rgb(255,255,0),
     text = "Hello World!",
     font = {

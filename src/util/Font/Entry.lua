@@ -1,11 +1,31 @@
 local class = require "util.middleclass"
 
+local FontRegistry = require "util.Font.Registry"
 local FontObject = require "util.Font.Object"
 
 local FontEntry = class("FontEntry")
 
-function FontEntry:initialize()
-  self.variants, self.dataVariants = {}, {}
+function FontEntry:initialize(family)
+  local entry = FontRegistry.getEntry(family)
+  if entry then
+    self.variants, self.dataVariants =
+      entry.variants, entry.dataVariants
+  else
+    self.variants, self.dataVariants = {}, {}
+    FontRegistry.add(family, self)
+  end
+end
+
+function FontEntry:add(tbl)
+  if tbl.type == "image" then
+    local font = love.graphics.newImageFont(tbl.file, tbl.glyphs, tbl.extraspacing)
+    local min, mag, ani = font:getFilter()
+    font:setFilter(tbl.minFilter or min, tbl.magFilter or mag, tbl.anisotropy or ani)
+    self:addVariant(FontObject(font, tbl.size), tbl.weight, tbl.italic)
+  elseif tbl.type == "data" then
+    self:addVariant(love.filesystem.newFileData(tbl.file), tbl.weight, tbl.italic)
+  end
+  return self
 end
 
 function FontEntry:addVariant(object, weight, italic)
@@ -66,5 +86,7 @@ function FontEntry:get(size, weight, italic)
   end
   return bestMatch, sizeDiff == 0 and weightDiff == 0 and italicMatches
 end
+
+FontEntry.static.glyphs = require "util.Font.glyphs"
 
 return FontEntry
