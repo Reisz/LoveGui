@@ -2,6 +2,7 @@ local class = require "util.middleclass"
 
 local FontRegistry = require "util.Font.Registry"
 local FontObject = require "util.Font.Object"
+local Utf8FontObject = require "util.Font.Utf8FontObject"
 
 local FontEntry = class("FontEntry")
 
@@ -16,16 +17,33 @@ function FontEntry:initialize(family)
   end
 end
 
+local env = { Font = FontEntry }
+function FontEntry.static.load(filename)
+  if _VERSION == "Lua 5.1" then
+    local fn, msg = loadfile(filename)
+    if not fn then error(msg) end
+    setfenv(fn, env)()
+  else -- Lua 5.2 or higher
+    local fn, msg = loadfile(filename, "bt", env)
+    if not fn then error(msg) end
+    fn()
+  end
+end
+
 function FontEntry:add(tbl)
+  local font
   if tbl.type == "image" then
-    local font = love.graphics.newImageFont(tbl.file, tbl.glyphs, tbl.extraspacing)
+    font = FontObject(love.graphics.newImageFont(tbl.file, tbl.glyphs, tbl.extraspacing), tbl.size)
     local min, mag, ani = font:getFilter()
     font:setFilter(tbl.minFilter or min, tbl.magFilter or mag, tbl.anisotropy or ani)
-    self:addVariant(FontObject(font, tbl.size), tbl.weight, tbl.italic)
+  elseif tbl.type == "utf8" then
+    font = Utf8FontObject(tbl.file, tbl)
+    font:setFilter(tbl.minFilter or "nearest", tbl.magFilter or "nearest", tbl.anisotropy or 1)
   elseif tbl.type == "data" then
-    self:addVariant(love.filesystem.newFileData(tbl.file), tbl.weight, tbl.italic)
+    font = love.filesystem.newFileData(tbl.file)
   end
-  return self
+  self:addVariant(font, tbl.weight, tbl.italic)
+  return self -- for chaining (to add multiple entries to one family)
 end
 
 function FontEntry:addVariant(object, weight, italic)
@@ -71,19 +89,18 @@ function FontEntry:get(size, weight, italic)
 
   if sizeDiff <= size * 0.2 then sizeDiff = 0 end
 
+  local isData = false
   for i = 1, #self.dataVariants do
     local v = self.dataVariants[i]
     local sd, wd, im = 0, math.abs(weight - v.weight), italic == v.italic
     if sd == 0 and wd == 0 and im then
       return FontObject(v.data, size), true
     elseif match(sd, sizeDiff, wd, weightDiff, im, italicMatches) then
-      bestMatch, sizeDiff, weightDiff, italicMatches = v, sd, wd, im
+      bestMatch, sizeDiff, weightDiff, italicMatches, isData = v, sd, wd, im, true
     end
   end
 
-  if type(bestMatch) == "table" and bestMatch.data then
-    bestMatch = FontObject(bestMatch.data, size)
-  end
+  if isData then bestMatch = FontObject(bestMatch.data, size) end
   return bestMatch, sizeDiff == 0 and weightDiff == 0 and italicMatches
 end
 

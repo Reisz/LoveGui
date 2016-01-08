@@ -19,11 +19,7 @@ FontEntry("lobster"):add {
   type = "data", file = "Lobster-Regular.ttf",
   weight = 50, italic = false
 }
-FontEntry("if1"):add {
-  type = "image", file = "Image Font 1.png",
-  glyphs = FontEntry.glyphs.saAd .. ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@äöüÄÖÜß",
-  size = 18, weight = 50, italic = false, minFilter = "linear", magFilter = "nearest"
-}
+FontEntry.load("fonts/if1.font.lua")
 
 local item = MainItem {
   background = {255, 255, 255},

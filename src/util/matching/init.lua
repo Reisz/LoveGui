@@ -21,7 +21,7 @@ function matcher.getFunction(m)
     if not fn then error(msg) end
     return setfenv(fn, env)()
   else -- Lua 5.2 or higher
-    local fn, msg = load("return " .. m, "matcher", "bt", env)()
+    local fn, msg = load("return " .. m, "matcher", "bt", env)
     if not fn then error(msg) end
     return fn()
   end
