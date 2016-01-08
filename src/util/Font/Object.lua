@@ -31,12 +31,24 @@ local function _print(self, text, method, filter, ...)
   self.font:setFilter(mif, maf, ani)
 end
 
-function FontObject:print(text, filter, x, y, r, sx, sy, kx, ky)
-  _print(self, text, "print", filter, x, y, r, sx, sy, kx, ky)
+function FontObject:print(text, ...)
+  _print(self, text, "print", ...)
 end
 
-function FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky)
-  _print(self, text, "printf", filter, x, v, limit, align, r, sx, sy, kx, ky)
+--[[function FontObject:printf(text, filter, x, y, limit, align, r, sx, sy, kx, ky)
+  _print(self, text, "printf", filter, x, y, limit, align, r, sx, sy, kx, ky)
+end]]
+
+function FontObject:layout(text)
+  return { text = text, method = "print" }
+end
+
+function FontObject:present(layout, filter, ...)
+  if layout.method == "print" then
+    _print(self, layout.text, layout.method, filter, ...)
+  else
+    _print(self, layout.text, layout.method, filter, layout.limit, layout.align, ...)
+  end
 end
 
 function FontObject:getWidth(text)

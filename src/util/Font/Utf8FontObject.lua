@@ -187,6 +187,14 @@ function Utf8FontObject:print(text, filter, x, y, r, sx, sy, kx, ky)
 end
 function Utf8FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky) end
 
+function Utf8FontObject:layout(text)
+  return { sb = self:getSpriteBatch(text) }
+end
+
+function Utf8FontObject:present(layout, filter, ...)
+  filterDraw(layout.sb, self.image, filter, ...)
+end
+
 function Utf8FontObject:getAscent() return self.data.ascent end
 function Utf8FontObject:getBaseline() return self.data.baseline end
 function Utf8FontObject:getDescent() return self.data.descent end

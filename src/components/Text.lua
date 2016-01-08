@@ -54,6 +54,13 @@ function Text:initialize()
   self.properties.font.minFilter:bindTo(self._font.filter, "minFilter")()
   self.properties.font.magFilter:bindTo(self._font.filter, "magFilter")()
   self.properties.font.anisotropy:bindTo(self._font.filter, "anisotropy")()
+
+  local function prep() self:layout() end
+  self.properties.text:bind(prep)()
+end
+
+function Text:layout()
+  self._font:prepare(self.text)
 end
 
 function Text:cDraw()
@@ -64,7 +71,7 @@ function Text:cDraw()
   end
 
   love.graphics.setColor(self.color)
-  self._font:print(self.text, 0, 0, self.orientation, scaleX, scaleY,
+  self._font:present(0, 0, self.orientation, scaleX, scaleY,
     self.offsetX, self.offsetY, self.shearX, self.shearY)
 end
 

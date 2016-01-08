@@ -35,6 +35,7 @@ function Font:requery()
   self.fontObject, self.exactMatch =
     FontRegistry.find(self.family, self.size, self.weight, self.italic)
   self.scaleFactor = self.size / self.fontObject:getSize()
+  self:refresh()
 end
 
 --- @property family [string]
@@ -173,16 +174,34 @@ function Font:setAnisotropy(a)
   self.filter.anisotropy = a
 end
 
-function Font:print(text, x, y, r, sx, sy, kx, ky)
+local function applyScale(factor, x, y, r, sx, sy, ...)
   r, sx, sy = r or 0, sx or 1, sy or 1
-  sx, sy = sx * self.scaleFactor, sy * self.scaleFactor
-  self.fontObject:print(text, self.filter, x, y, r, sx, sy, kx, ky)
+  sx, sy = sx * factor, sy * factor
+  return x, y, r, sx, sy, ...
 end
 
-function Font:printf(text, x, v, limit, align, r, sx, sy, kx, ky)
+function Font:print(text, ...)
+  self.fontObject:print(text, self.filter, applyScale(self.scaleFactor, ...))
+end
+
+--[[function Font:printf(text, x, v, limit, align, r, sx, sy, kx, ky)
   r, sx, sy = r or 0, sx or 1, sy or 1
   sx, sy = sx * self.scaleFactor, sy * self.scaleFactor
   self.fontObject:printf(text, self.filter, x, v, limit, align, r, sx, sy, kx, ky)
+end]] -- TODO find replacement
+
+function Font:prepare(text)
+  self.prepQuery = text
+  self:refresh()
+end
+
+function Font:refresh()
+  local pq, fo = self.prepQuery, self.fontObject
+  if pq then self.layout = fo:layout(pq) end
+end
+
+function Font:present(...)
+  self.fontObject:present(self.layout, self.filter, applyScale(self.scaleFactor, ...))
 end
 
 return Font
