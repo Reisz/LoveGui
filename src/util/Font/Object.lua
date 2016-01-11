@@ -40,7 +40,17 @@ end
 end]]
 
 function FontObject:layout(text)
-  return { text = text, method = "print" }
+  local linecount = select(2, string.gsub(text, "\n", ""))
+  linecount = linecount > 0 and linecount or 1
+  return {
+    text = text, method = "print",
+    width = self:getWidth(text),
+    height =  linecount * self:getHeight()
+  }
+end
+
+function FontObject:getLayoutSize(layout)
+  return layout.width, layout.height
 end
 
 function FontObject:present(layout, filter, ...)

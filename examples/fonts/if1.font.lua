@@ -14,6 +14,6 @@ if Font then
       "l", "ft" .. Font.glyphs.u8, -1,
       "abcdefhiklmnoprstuvwxz" .. Font.glyphs.u8, "j", -3
     }, size = 18, baseline = 13, ascent = 12, descent = 4, weight = 50, italic = false,
-    minFilter = "linear", magFilter = "nearest"
+    minFilter = "linear", magFilter = "nearest", anisotropy = 16
   }
 end

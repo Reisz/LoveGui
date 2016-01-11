@@ -2,10 +2,12 @@ local rgb = require "util.rgb" ()
 
 local Item = require "components.Item"
 local Text = require "components.Text"
+local Column = require "components.Column"
 
-return Item {
+return Column {
+  x = 150, y = 50, spacing = 10,
   Text {
-    x = 180, y = 50,
+    width = 600,
     color = rgb(255,0,0),
     text = [[
       Grumpy wizards make toxic brew for the evil Queen and Jack.
@@ -25,7 +27,7 @@ return Item {
     font_family = "if1", font_size = 18
   },
   Text {
-    x = 200, y = 300,
+    width = 600,
     color = rgb(0,177,177),
     text = [=[
       ```lua
@@ -43,6 +45,6 @@ return Item {
         print(string.sub(string1, 2, 3))
       ```
     ]=],
-    font = { family = "if1", size = 18 }
+    font = { family = "if1", size = 14 }
   }
 }

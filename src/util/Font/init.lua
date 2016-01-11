@@ -195,6 +195,11 @@ function Font:prepare(text)
   self:refresh()
 end
 
+function Font:getPreparedSize()
+  local sf, w, h = self.scaleFactor, self.fontObject:getLayoutSize(self.layout)
+  return w * sf, h * sf
+end
+
 function Font:refresh()
   local pq, fo = self.prepQuery, self.fontObject
   if pq then self.layout = fo:layout(pq) end

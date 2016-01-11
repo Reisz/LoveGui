@@ -52,7 +52,7 @@ end
 
 function Item:cDraw()
   local children = self.children
-  for i = #children, 1, -1 do
+  for i = 1, #children do
     children[i]:draw()
   end
 end
@@ -67,6 +67,7 @@ end
 function Item:childAt(x, y)
   local point = Point.resolveFunctionArgs(x, y)
   local children = self.children
+  -- backwards traversal to keep drawing order
   for i = #children, 1, -1 do
     if children[i]:conatins(point) then
       return children[i]
@@ -76,6 +77,16 @@ end
 
 function Item:cointains(x, y)
   return self.rect:contains(x, y)
+end
+
+function Item:getWidth()
+  local w = self.width
+  return w ~= 0 and w or self.implicitWidth
+end
+
+function Item:getHeight()
+  local h = self.height
+  return h ~= 0 and h or self.implicitHeight
 end
 
 return Item

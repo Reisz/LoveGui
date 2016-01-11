@@ -152,7 +152,7 @@ end
 
 local sbMethod = version >= version{0,9,0} and "add" or "addq"
 function Utf8FontObject:getSpriteBatch(text)
-  local x, y = 0, 0
+  local x, y, w, h = 0, 0, 0, self.height
   local batch = love.graphics.newSpriteBatch(self.image, utf8.len(text), "static")
   local gl, kern = self.glyphs, self.kerning
   text = text:gsub(self.ligMatcher, self.ligatures)
@@ -160,6 +160,7 @@ function Utf8FontObject:getSpriteBatch(text)
   local prev
   for _,c in utf8.codes(text) do
     if c == 10 then
+      w, h = x > w and x or w, h + self.height
       x, y, prev = 0, y + self.height, nil
     else
       local quad = gl[c]
@@ -171,7 +172,7 @@ function Utf8FontObject:getSpriteBatch(text)
     end
   end
 
-  return batch
+  return batch, x > w and x or w, h
 end
 
 local function filterDraw(drawable, image, filter, ...)
@@ -188,7 +189,8 @@ end
 function Utf8FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky) end
 
 function Utf8FontObject:layout(text)
-  return { sb = self:getSpriteBatch(text) }
+  local sb, w, h = self:getSpriteBatch(text)
+  return { sb = sb, width = w, height = h }
 end
 
 function Utf8FontObject:present(layout, filter, ...)
@@ -210,7 +212,24 @@ function Utf8FontObject:setFilter(minFilter, magFilter, anisotropy)
 end
 
 function Utf8FontObject:getWidth(text)
-  -- TODO width calculation
+  local w, maxw = 0, 0
+  local gl, kern = self.glyphs, self.kerning
+  text = text:gsub(self.ligMatcher, self.ligatures)
+
+  local prev
+  for _,c in utf8.codes(text) do
+    if c == 10 then
+      maxw, w = w > maxw and w or maxw, 0
+    else
+      local quad = gl[c]
+      if quad then
+        if prev and kern[c] then w = w + (kern[c][prev] or 0) end; prev = c
+        w = w + select(3, quad:getViewport())
+      end
+    end
+  end
+
+  return maxw
 end
 
 function Utf8FontObject:getHeight() return self.data.height end

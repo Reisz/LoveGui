@@ -61,6 +61,24 @@ end
 
 function Text:layout()
   self._font:prepare(self.text)
+  local iw, ih = self._font:getPreparedSize()
+  self.properties.implicitWidth:_set(iw)
+  self.properties.implicitHeight:_set(ih)
+
+
+  local x, y = 0, 0
+  local ha = self.horizontalAlignment
+  if ha ~= "left" then
+    local w = self.width
+    local dw = w - iw
+    if dw > 0 then
+      if ha == "right" then x = dw
+      elseif ha == "center" then x = dw / 2
+      end
+    end
+  end
+
+  self._x, self._y = x, y
 end
 
 function Text:cDraw()
@@ -71,7 +89,7 @@ function Text:cDraw()
   end
 
   love.graphics.setColor(self.color)
-  self._font:present(0, 0, self.orientation, scaleX, scaleY,
+  self._font:present(self._x, self._y, self.orientation, scaleX, scaleY,
     self.offsetX, self.offsetY, self.shearX, self.shearY)
 end
 
