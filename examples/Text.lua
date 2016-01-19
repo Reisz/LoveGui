@@ -1,6 +1,5 @@
 local rgb = require "util.rgb" ()
 
-local Item = require "components.Item"
 local Text = require "components.Text"
 local Column = require "components.Column"
 

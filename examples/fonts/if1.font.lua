@@ -1,6 +1,6 @@
 if Font then
   Font("if1"):add {
-    type = "utf8", file = "Image Font 1.png",
+    type = "utf8", file = "fonts/Image Font 1.png",
     glyphs =
       Font.glyphs.saAd ..
       ".,!?-+/\\_~():;%&`´'*#=[]\"{}$<>|^°@€§" ..

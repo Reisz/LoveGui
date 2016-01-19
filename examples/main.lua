@@ -5,20 +5,14 @@ local MainItem = require "components.MainItem"
 local Rectangle = require "components.Rectangle"
 local Text = require "components.Text"
 local Swap = require "components.Swap"
-  
+
 local FontEntry = require "util.Font.Entry"
--- example image font from: https://www.love2d.org/wiki/Tutorial:Fonts_and_Text
-FontEntry("tutorial"):add {
-  type = "image", file = "imagefont.png",
-  glyphs = FontEntry.glyphs.saAd .. ".,!?-+/():;%&`'*#=[]\"",
-  size = 17, weight = 50, italic = false, magFilter = "nearest"
-}
 -- Lobster from http://google.com/fonts
 FontEntry("lobster"):add {
-  type = "data", file = "Lobster-Regular.ttf",
+  type = "data", file = "fonts/Lobster-Regular.ttf",
   weight = 50, italic = false
 }
-FontEntry.load("fonts/if1.font.lua")
+FontEntry.load("fonts")
 
 local item = MainItem {
   background = {255, 255, 255},

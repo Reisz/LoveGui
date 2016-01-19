@@ -17,8 +17,21 @@ function FontEntry:initialize(family)
   end
 end
 
+function FontEntry.static.load(name)
+  if love.filesystem.isDirectory(name) then
+    for _, v in ipairs(love.filesystem.getDirectoryItems(name)) do
+      local n = name .. "/" .. v
+      if love.filesystem.isFile(n) and string.find(v,"%.font%.lua$") then
+        FontEntry.loadFile(n)
+      end
+    end
+  else
+    FontEntry.loadFile(name)
+  end
+end
+
 local env = { Font = FontEntry }
-function FontEntry.static.load(filename)
+function FontEntry.static.loadFile(filename)
   if _VERSION == "Lua 5.1" then
     local fn, msg = loadfile(filename)
     if not fn then error(msg) end
