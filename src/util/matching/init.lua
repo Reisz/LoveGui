@@ -45,4 +45,10 @@ function matcher.isMatcher(m)
   return m and (getmetatable(m) or matcherId)[matcherId]
 end
 
+matcher.none = setmetatable({}, {
+  __call = function() return false end,
+  __tostring = function() return "none" end,
+  [matcherId] = true
+})
+
 return setmetatable(matcher, { __call = function(_, ...) return matcher.create(...) end })

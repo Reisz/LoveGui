@@ -15,9 +15,9 @@ Item.property.width = 0
 Item.property.height = 0
 
 Item.property.implicitWidth = 0
-Item.property.implicitWidth:setMatcher("__")
+Item.property.implicitWidth:setMatcher(matcher.none)
 Item.property.implicitHeight = 0
-Item.property.implicitHeight:setMatcher("__")
+Item.property.implicitHeight:setMatcher(matcher.none)
 
 Item.property.layer = Component.group{
   enabled = false, format = "normal", msaa = 0, wrapMode = "repeat",

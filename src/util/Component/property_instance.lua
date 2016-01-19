@@ -1,9 +1,9 @@
 local propertyInstance = {}
 local e = "Property %s: New value %s did not match criteria."
 
-function propertyInstance:new(tbl, args, canDefault)
+function propertyInstance:new(instance, args, canDefault)
   -- manage value and assignment
-  local value, v = self.value, args[self.name]
+  local value, v, tbl = self.value, args[self.name], instance.properties
   if v then
     assert(self.matcher(v), e:format(self.name, v))
     value = v; args[self.name] = nil
@@ -16,6 +16,10 @@ function propertyInstance:new(tbl, args, canDefault)
       value[i] = val
     end
     setmetatable(value, mt)
+  end
+
+  if type(value) == "table" and type(value.properties) == "table" then
+    value.properties.parent:_set(instance)
   end
 
   local prop = propertyInstance.create(value, self.matcher)

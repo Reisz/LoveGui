@@ -1,5 +1,6 @@
 local class = require "util.middleclass"
 local property = require "util.Component.property"
+local matcher = require "util.matching"
 
 local Component = class("Component")
 
@@ -25,16 +26,25 @@ local function __newindex(self, key, value)
 end
 
 -- overwrite middleclass Object:new
+local empty = {}
+local parentProp = property.create("parent", nil)
+parentProp:setMatcher(matcher.none)
 function Component:new(tbl)
   local instance = self:allocate()
 
+  -- setup id and class
+  local id, class = tbl.id, tbl.class
+  tbl.id, tbl.class = nil, nil
+  (require "util.context"):register(instance, id, class)
+
   -- setup properties
   rawset(instance, "properties", {})
+  parentProp(instance, empty, false)
 
   local klass = self
   while klass.property do
     for _, v in pairs(klass.property) do
-      v(instance.properties, tbl, type(instance.properties.default) == "nil")
+      v(instance, tbl, type(instance.properties.default) == "nil")
     end
     klass = klass.super
   end
@@ -43,7 +53,11 @@ function Component:new(tbl)
   if default then
     default = default:get()
     for i = 1, #tbl do
-      table.insert(default, tbl[i])
+      local v= tbl[i]
+      if type(v) == "table" and type(v.properties) == "table" then
+        v.properties.parent:_set(instance)
+      end
+      table.insert(default, v)
     end
   end
 

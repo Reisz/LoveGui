@@ -33,8 +33,8 @@ local function _set(self, value) __set(self, value, "_set") end
 local function get(self) return self.helper end
 
 local empty = {}
-function groupInstance:new(tbl, args)
-  local name = self.name
+function groupInstance:new(instance, args)
+  local name, tbl = self.name, instance.properties
 
   -- manage values and assignment
   local _group, values = args[name] or empty, {}; args[name] = nil
@@ -53,6 +53,10 @@ function groupInstance:new(tbl, args)
       if v1 then
         assert(v.matcher(v1), e:format(name, i, v1))
         value = v1
+      end
+
+      if type(value) == "table" and type(value.properties) == "table" then
+        value.properties.parent:_set(tbl)
       end
 
       values[i] = propertyInstance.create(value, v.matcher)
