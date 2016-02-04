@@ -1,11 +1,11 @@
 local set = {}
 
-function set.new()
-  return setmetatable({}, { __index = set })
+function set.new(...)
+  return setmetatable({...}, { __index = set })
 end
 
 function set:insert(v) self[v] = true end
-function set:remove(v) self[v] = false end
+function set:remove(v) self[v] = nil end
 
 function set:contains(v)
   return self[v] or false
