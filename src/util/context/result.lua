@@ -86,7 +86,7 @@ function result:add(elements)
   local merged = setmetatable(set.copy(self.set), { __index = result })
   if type(elements) ~= "table" then
     set.union(merged.set, self.context.query(elements).set)
-  elseif getmetatable(elements) ~= mt then
+  elseif getmetatable(elements).__index ~= result then
     set.insert(merged.set, elements)
   else
     if elements.context == self.context then

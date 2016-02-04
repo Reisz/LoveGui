@@ -29,7 +29,7 @@ local function subfn(op, num)
 end
 
 return setmetatable(glyphs, {
-  __index = function(self, key)
+  __index = function(_, key)
     return string.gsub(key, "([aAdsu]%_?)(%d*)", subfn)
   end, __newindex = function() end
 })

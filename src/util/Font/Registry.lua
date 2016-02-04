@@ -24,7 +24,7 @@ end
 
 local os = love._os or love.system.getOS()
 if os == "Windows" then
-  function FontRegistry.findSystem(family, weight, italic)
+  function FontRegistry.findSystem(family, weight, italic) -- luacheck: no unused args
     -- TODO windows system font management (font file parsing)
   end
 else

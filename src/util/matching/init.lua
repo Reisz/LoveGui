@@ -29,7 +29,7 @@ end
 
 local matcherId = {}
 function matcher.create(m)
-  local _m, mt = matcher.getFunction(m)
+  local _m, mt = (matcher.getFunction(m))
   if type(_m) == "table" then
     mt = getmetatable(_m)
   else

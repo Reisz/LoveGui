@@ -65,7 +65,7 @@ end
 
 
 local pattern = "^(%.?)([^ :]*):(.*)$"
-local function subquery(resultSet, q)
+local function subquery(self, resultSet, q)
   local sign, name, filter = string.match(q, pattern)
   filter = context.createFilter(filter)
 
@@ -83,7 +83,7 @@ end
 function context:query(q)
   local resultSet = {}
   for u in string.gmatch(q, "[^,]+") do
-    subquery(resultSet, u)
+    subquery(self, resultSet, u)
   end
   return setmetatable({ context = self, set = resultSet }, { __index = result })
 end

@@ -81,7 +81,7 @@ local function getMatcher(ligatures)
   return table.concat{"[", table.concat(chars, "]?["), "]?"}
 end
 
-function Utf8FontObject:initialize(image, data, size)
+function Utf8FontObject:initialize(image, data)
   self.data = data
 
   -- detect quads using getPixel from ImageData
@@ -186,7 +186,8 @@ function Utf8FontObject:print(text, filter, x, y, r, sx, sy, kx, ky)
   -- TODO cache
   filterDraw(self:getSpriteBatch(text), self.image, filter, x, y, r, sx, sy, 0, 0, kx, ky)
 end
-function Utf8FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky) end
+function Utf8FontObject:printf(text, filter, x, v, limit, align, r, sx, sy, kx, ky) -- luacheck: no unused args
+end
 
 function Utf8FontObject:layout(text)
   local sb, w, h = self:getSpriteBatch(text)

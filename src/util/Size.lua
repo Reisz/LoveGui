@@ -36,8 +36,8 @@ function Size:__call()
 end
 
 function Size.static.resolveFunctionArgs(width, height)
-  if class.Object.isInstanceOf(width, Point) then
-    return x
+  if class.Object.isInstanceOf(width, Size) then
+    return width
   elseif type(width) == "table" then
     return Size(getWH(width))
   else
