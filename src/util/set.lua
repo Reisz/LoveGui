@@ -1,7 +1,11 @@
 local set = {}
 
 function set.new(...)
-  return setmetatable({...}, { __index = set })
+  local s = {}
+  for i = 1, select("#", ...) do
+   set.insert(s, select(i, ...))
+  end
+  return setmetatable(s, { __index = set })
 end
 
 function set:insert(v) self[v] = true end
