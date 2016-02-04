@@ -2,6 +2,9 @@ local class = require "util.middleclass"
 local property = require "util.Component.property"
 local matcher = require "util.matching"
 
+-- inject component specific methods to context result
+require "util.Component.context" (require "util.context.result")
+
 local Component = class("Component")
 
 -- handles property and standard member access
@@ -29,17 +32,22 @@ end
 local empty = {}
 local parentProp = property.create("parent", nil)
 parentProp:setMatcher(matcher.none)
+local contextProp = property.create("context", nil)
+contextProp:setMatcher(matcher.none)
 function Component:new(tbl)
   local instance = self:allocate()
 
   -- setup id and class
-  local id, class = tbl.id, tbl.class
+  local id, classes = tbl.id, tbl.class
   tbl.id, tbl.class = nil, nil
-  (require "util.context"):register(instance, id, class)
+  local ctx = require "util.context"
+  ctx:register(instance, id, classes)
 
   -- setup properties
   rawset(instance, "properties", {})
   parentProp(instance, empty, false)
+  contextProp(instance, empty, false)
+  instance.properties.context:_set(ctx)
 
   local klass = self
   while klass.property do
