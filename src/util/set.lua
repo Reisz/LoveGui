@@ -21,12 +21,14 @@ function set:intersect(other)
       self[v] = nil
     end
   end
+  return self
 end
 
 function set:union(other)
   for v in set.it(other) do
     self[v] = true
   end
+  return self
 end
 
 function set:it() return pairs(self) end
