@@ -29,20 +29,16 @@ end
 
 local matcherId = {}
 function matcher.create(m)
-  local _m, mt = (matcher.getFunction(m))
-  if type(_m) == "table" then
-    mt = getmetatable(_m)
-  else
-    mt = { __call = _m }
-    _m = setmetatable({}, mt)
-  end
-  mt.__tostring = function() return m end
-  mt[matcherId] = true
-  return _m
+  local f, mt = matcher.getFunction(m), {
+    __tostring = function() return m end,
+    [matcherId] = true
+  }
+  mt.__call = function(_, ...) return f(...) end
+  return setmetatable({}, mt)
 end
 
 function matcher.isMatcher(m)
-  return m and (getmetatable(m) or matcherId)[matcherId]
+  return (m and (getmetatable(m) or matcherId)[matcherId]) or false
 end
 
 matcher.none = setmetatable({}, {

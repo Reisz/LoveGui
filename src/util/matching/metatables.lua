@@ -38,12 +38,14 @@ return {
   tbl = {
     __call = function(self, v)
       if type(v) ~= "table" then return false end
-      for i,_v in pairs(v) do if not self[i](_v) then return false end end
+      for i,_v in pairs(v) do
+        local f = self[i]; if not(f and f(_v)) then return false end end
       return true
     end
   },
   list = {
     __call = function(self, v)
+      if type(v) ~= "table" then return false end
       local matcher, size = self[1], #v
       local min, max = self[2], self[3]
 
@@ -57,7 +59,7 @@ return {
       for i=1, size do
         if not matcher(v[i]) then return false end
       end
-      
+
       return true
     end
   },
@@ -75,6 +77,11 @@ return {
   ts_pt = {
     __call = function(self, v)
       return type(string.find(tostring(v), self[1])) ~= "nil"
+    end
+  },
+  tn = {
+    __call = function(self, v)
+      return tonumber(v) == self[1]
     end
   },
   c = {

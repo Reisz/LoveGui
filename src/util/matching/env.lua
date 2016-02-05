@@ -64,4 +64,15 @@ usemt_call_index "subc_pt" -- subclass of class with name matches a pattern
 function env.is.l2object(v) return type(v) == "userdata" and type(v.typeOf) == "function" end
 usemt_call_index "l2t" -- is love2d object with type equals
 
-return setmetatable(env, { __index = _G })
+-- setup lua globals
+local safeMethods = {}
+for v in string.gmatch([[
+  string table utf8 math
+  getmetatable ipairs next pairs
+  rawequal rawget rawlen
+  tonumber tostring type
+]], "%S+") do
+  safeMethods[v] = _G[v]
+end
+
+return setmetatable(env, { __index = safeMethods })
