@@ -1,4 +1,3 @@
-package.path = "src/?.lua;src/?/init.lua"
 local matcher = require "util.matching"
 
 describe("util.matching", function()

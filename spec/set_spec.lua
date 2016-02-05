@@ -1,4 +1,3 @@
-package.path = "src/?.lua;src/?/init.lua"
 local set = require "util.set"
 
 describe("util.set", function()
