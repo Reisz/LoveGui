@@ -24,4 +24,4 @@ script:
   - busted --verbose --coverage
 
 after_success:
-  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install -e $TRAVIS_BUILD_DIR/src/util/middleclass.lua
+  - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install -e middleclass
