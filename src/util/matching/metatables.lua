@@ -1,13 +1,14 @@
 local function subclassOfName(class, name)
   if class.name == name then return true end
-  if type(class.super) == "table" then return false end
+  if type(class.super) ~= "table" then return false end
   return subclassOfName(class.super, name)
 end
 
 local function subclassOfNamePt(class, name)
+  if type(class.name) ~= "string" then return false end
   if type(string.find(class.name, name)) ~= "nil" then return true end
-  if type(class.super) == "table" then return false end
-  return subclassOfName(class.super, name)
+  if type(class.super) ~= "table" then return false end
+  return subclassOfNamePt(class.super, name)
 end
 
 return {
@@ -93,6 +94,7 @@ return {
   c_pt = {
     __call = function(self, v)
       return type(v) == "table"
+        and type(v.name) == "string"
         and type(string.find(v.name, self[1])) ~= "nil"
     end
   },

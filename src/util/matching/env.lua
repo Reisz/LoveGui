@@ -51,7 +51,7 @@ usemt_call_index "tn" -- tonumber equals
 -- functions work implicitly, because global environment is set
 
 -- middleclass matchers
-function env.is.class(v) return Object.inSubclassOf(v, Object) end
+function env.is.class(v) return Object.isSubclassOf(v, Object) end
 function env.is.object(v) return Object.isInstanceOf(v, Object) end
 usemt_call_index "c" -- class name equals
 usemt_call_index "c_pt" -- class name matches a pattern
