@@ -315,6 +315,54 @@ describe("util.matching", function()
       assert.is_false(m())
   end)
 
+  describe("love2d integration", function()
+    local _type, object = type, {
+      typeOf = function(self, type)
+        return self.type == type
+      end
+    }
+
+    setup(function()
+      _G.type = function(v)
+        if v == object then return "userdata"
+        else return _type(v) end
+      end
+    end)
+    teardown(function()
+      _G.type = _type
+    end)
+
+    it("should recognise love2d objects using is.l2object", function()
+      local m = matcher("is.l2object")
+      -- assert.is_true(m(object))
+      assert.is_false(m{ typeOf = function() return true end })
+      assert.is_false(m{})
+      assert.is_false(m(5))
+      assert.is_false(m())
+    end)
+
+    it("should recognise love2d objects using is.l2object", function()
+      local m = matcher("is.l2object")
+      assert.is_true(m(object))
+      assert.is_false(m{ typeOf = function() return true end })
+      assert.is_false(m{})
+      assert.is_false(m(5))
+      assert.is_false(m())
+    end)
+
+    it("should match love2d type names using l2t", function()
+      local m = matcher("l2t('FileData')")
+      object.type = "FileData"
+      assert.is_true(m(object))
+      object.type = "ImageData"
+      assert.is_false(m(object))
+      assert.is_false(m{ typeOf = function() return true end })
+      assert.is_false(m{})
+      assert.is_false(m(5))
+      assert.is_false(m())
+    end)
+  end)
+
   describe("default none matcher", function()
     it("should match nothing", function()
         local m = matcher.none
