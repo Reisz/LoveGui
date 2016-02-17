@@ -38,8 +38,6 @@ end
 function Point.static.resolveFunctionArgs(x, y)
   if class.Object.isInstanceOf(x, Point) then
     return x
-  elseif type(x) == "table" then
-    return Point(getXY(x))
   else
     return Point(x, y)
   end
