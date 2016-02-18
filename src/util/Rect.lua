@@ -8,9 +8,9 @@ local Rect = class("Rect")
 function Rect:initialize(x, y, width, height)
   local point, size
   if type(x) == "table" then
-    point, size = Point(x), Size(y, height)
+    point, size = Point.resolveFunctionArgs(x), Size.resolveFunctionArgs(y, width)
   else
-    point, size = Point(x, y), Size(width, height)
+    point, size = Point.resolveFunctionArgs(x, y), Size.resolveFunctionArgs(width, height)
   end
   self.point, self.size = point, size
 end
