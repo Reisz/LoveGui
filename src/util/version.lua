@@ -5,7 +5,7 @@ local version = {
 }
 
 local function getNumbers(tbl)
-  return tbl.major or tbl[1], tbl.minor or tbl[2], tbl.revision or tbl[3]
+  return tbl.major or tbl[1], tbl.minor or tbl[2] or 0, tbl.revision or tbl[3] or 0
 end
 
 local mt; mt = {
