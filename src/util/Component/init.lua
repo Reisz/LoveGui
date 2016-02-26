@@ -1,4 +1,4 @@
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 local property = require "util.Component.property"
 local matcher = require "util.matching"
 

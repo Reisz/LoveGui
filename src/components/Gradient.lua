@@ -1,4 +1,4 @@
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 local Component = require "util.Component"
 
 local straightShader = love.graphics.newShader [[

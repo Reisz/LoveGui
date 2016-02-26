@@ -1,4 +1,4 @@
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 local matcher = require "util.matching"
 
 local fill = require "components.Rectangle.fill"

@@ -1,4 +1,4 @@
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 
 local FontRegistry = require "util.Font.Registry"
 

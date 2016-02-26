@@ -1,5 +1,5 @@
 local utf8 = require "utf8"
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 local version = require "util.version"
 local glyphsUtil = require "util.Font.glyphs"
 local FontObject = require "util.Font.Object"

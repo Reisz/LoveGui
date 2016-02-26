@@ -1,22 +1,22 @@
-local set = {}
+local Set = {}
 
-function set.new(...)
+function Set.new(...)
   local s = {}
   for i = 1, select("#", ...) do
-   set.insert(s, select(i, ...))
+   Set.insert(s, select(i, ...))
   end
-  return setmetatable(s, { __index = set })
+  return setmetatable(s, { __index = Set })
 end
 
-function set:insert(v) self[v] = true end
-function set:remove(v) self[v] = nil end
+function Set:insert(v) self[v] = true end
+function Set:remove(v) self[v] = nil end
 
-function set:contains(v)
+function Set:contains(v)
   return self[v] or false
 end
 
-function set:intersect(other)
-  for v in set.it(self) do
+function Set:intersect(other)
+  for v in Set.it(self) do
     if other[v] ~= true then
       self[v] = nil
     end
@@ -24,29 +24,29 @@ function set:intersect(other)
   return self
 end
 
-function set:union(other)
-  for v in set.it(other) do
+function Set:union(other)
+  for v in Set.it(other) do
     self[v] = true
   end
   return self
 end
 
-function set:it() return pairs(self) end
+function Set:it() return pairs(self) end
 
-function set:toList()
+function Set:toList()
   local list, i = {}, 1
-  for v in set.it(self) do
+  for v in Set.it(self) do
     list[i], i = v, i + 1
   end
   return list
 end
 
-function set:copy()
-  local result = getmetatable(self).__index == set and set.new() or {}
-  for v in set.it(self) do
-    set.insert(result, v)
+function Set:copy()
+  local result = getmetatable(self).__index == Set and Set.new() or {}
+  for v in Set.it(self) do
+    Set.insert(result, v)
   end
   return result
 end
 
-return set
+return Set

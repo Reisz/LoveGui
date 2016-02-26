@@ -1,5 +1,5 @@
 local matcher = require "util.matching"
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 
 describe("util.matching", function()
   it("should recognise itself", function()

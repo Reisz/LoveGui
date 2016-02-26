@@ -1,5 +1,5 @@
 local metatables = require "util.matching.metatables"
-local class = require "util.middleclass"
+local class = require "lib.middleclass"
 local Object = class.Object
 
 local env = { is = {} }
