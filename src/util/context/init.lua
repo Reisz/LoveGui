@@ -101,4 +101,4 @@ function context.create()
 end
 
 function context.setCurrent(ctx) current = ctx end
-return function() return current or context.create:activate() end
+return function() return current or context.create():activate() end

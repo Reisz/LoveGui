@@ -40,7 +40,7 @@ function Component:new(tbl)
   -- setup id and class
   local id, classes = tbl.id, tbl.class
   tbl.id, tbl.class = nil, nil
-  local ctx = require "util.context"
+  local ctx = require "util.context" ()
   ctx:register(instance, id, classes)
 
   -- setup properties
