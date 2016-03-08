@@ -36,7 +36,7 @@ function Size:__call()
 end
 
 function Size.static.resolveFunctionArgs(width, height)
-  if class.Object.isInstanceOf(width, Size) then
+  if type(width) == "table" and width.class == Size then
     return width
   else
     return Size(width, height)

@@ -114,6 +114,18 @@ describe("util.set", function()
     assert.spy(sp).was_called_with(5)
   end)
 
+  it("should be able to filter elements", function()
+    local s = set.new(1, 2, 6, 9)
+    s:filterRemove(function(x) return x > 5 end)
+    assert.are.same(set.new(1,2), s)
+  end)
+
+  it("should be able to filter elements using additional parameters", function()
+    local s = set.new(1, 2, 6, 9)
+    s:filterRemove(function(x, max) return x > max end, 6)
+    assert.are.same(set.new(1,2,6), s)
+  end)
+
   it("should convert empty set to empty list", function()
     assert.are.same(set.toList(set.new()), {})
   end)

@@ -36,7 +36,7 @@ function Point:__call()
 end
 
 function Point.static.resolveFunctionArgs(x, y)
-  if class.Object.isInstanceOf(x, Point) then
+  if type(x) == "table" and x.class == Point then
     return x
   else
     return Point(x, y)

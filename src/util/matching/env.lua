@@ -1,6 +1,4 @@
 local metatables = require "util.matching.metatables"
-local class = require "lib.middleclass"
-local Object = class.Object
 
 local env = { is = {} }
 
@@ -51,8 +49,9 @@ usemt_call_index "tn" -- tonumber equals
 -- functions work implicitly, because global environment is set
 
 -- middleclass matchers
-function env.is.class(v) return Object.isSubclassOf(v, Object) end
-function env.is.object(v) return Object.isInstanceOf(v, Object) end
+local function isClass(v) return type(v) == "table" and type(v.new) == "function" and type(v.static) == "table" end
+env.is.class = isClass
+function env.is.object(v) return type(v) == "table" and isClass(v.class) end
 usemt_call_index "c" -- class name equals
 usemt_call_index "c_pt" -- class name matches a pattern
 usemt_call_index "o" -- object of class with name equals

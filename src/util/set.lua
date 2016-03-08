@@ -33,6 +33,14 @@ end
 
 function Set:it() return pairs(self) end
 
+function Set:filterRemove(fn, ...)
+  for v in Set.it(self) do
+    if fn(v, ...) then
+      self[v] = nil
+    end
+  end
+end
+
 function Set:toList()
   local list, i = {}, 1
   for v in Set.it(self) do
