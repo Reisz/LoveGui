@@ -1,4 +1,4 @@
-local hasEvent =
+local hasEvent = ""
 local PropertyInstance = {}
 
 function PropertyInstance:get()

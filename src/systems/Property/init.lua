@@ -1,7 +1,7 @@
 local class = require "lib.middleclass"
 
-local PropertyInstance = require "util.Property.PropertyInstance"
-local GroupInstance = require "util.Property.GroupInstance"
+local PropertyInstance = require "systems.Property.PropertyInstance"
+local GroupInstance = require "systems.Property.GroupPropertyInstance"
 
 local Property = class("Property")
 
@@ -37,7 +37,19 @@ function mixin:bind(name, object, otherName)
   assert(getmetatable(property) ~= GroupInstance)
 end
 
-function Property:initialize(tbl)
+function Property:initialize(name, default)
+
+end
+
+function Property:clone(newValue)
+
+end
+
+function Property:match(matcher)
+
+end
+
+function Property:animate(easing, duration)
 
 end
 
