@@ -1,37 +1,37 @@
 local class = require "lib.middleclass"
 
-local Property = require "systems.Property"
-
+--------------------------------------------------------------------------------
+-- Mixin preparation
+--------------------------------------------------------------------------------
 local Component = class("Component")
-Component:include(Property.mixin)
+Component.static.init, Component.static.subc = {}, {}
 
---- Create an anonymous subclass with updated property values and children list.
----
-function Component.static:new(tbl)
-  local subclass = class("Anonymous" .. self.name, self)
-  subclass.static.properties = {}
-  subclass.static.children = {}
-
-  local len = #tbl
-  for i,v in pairs(tbl) do
-    if type(i) == "number" and i <= len then
-      if type(v) == "table" and v.name then
-
-      else
-        print()
-      end
-    else -- change default property values
-      local prop = self.properties[i]
-      if prop then subclass.properties[i] = prop:clone(v)
-      else print("Unknown property " .. self.name .. "." .. i) end
-    end
+function Component:initialize(parent)
+  -- update inherited properties before anything else
+  if self.class.super and self.class.super.initialize then
+    self.class.super.initialize(self, parent)
   end
 
-  return subclass
+  -- initlialize mixins
+  for _,v in pairs(self.init) do
+    v(self, parent)
+  end
 end
 
 function Component.static:subclassed(other)
+  -- inherit mixin methods
+  other.static.init = setmetatable({}, { __index = self.init })
+  other.static.subc = setmetatable({}, { __index = self.init })
 
+  -- do mixin subclassing
+  for _,v in pairs(self.subc) do
+    v(self, other)
+  end
 end
+
+--------------------------------------------------------------------------------
+-- Default Mixins
+--------------------------------------------------------------------------------
+Component:include(require "systems.Property")
 
 return Component

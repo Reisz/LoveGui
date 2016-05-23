@@ -1,60 +1,76 @@
-local class = require "lib.middleclass"
+local SimpleProperty = require "systems.Property.SimpleProperty"
+local GroupProperty = require "systems.Property.GroupProperty"
+local ListProperty = require "systems.Property.ListProperty"
 
-local PropertyInstance = require "systems.Property.PropertyInstance"
-local GroupInstance = require "systems.Property.GroupPropertyInstance"
+local Property = {}
 
-local Property = class("Property")
-
-local mixin = {}
-Property.static.mixin = mixin
-
-function mixin:__index(key)
-  local property = self.properties[key]
-  return property and property:get()
+--------------------------------------------------------------------------------
+-- Initialize / Subclass
+--------------------------------------------------------------------------------
+local function initialize(self)
+  local properties = {}; self.properties = properties
+  for i,v in pairs(self.static.properties) do
+    properties[i] = v:create()
+  end
 end
 
-function mixin:__newindex(key, val)
-  local property = self.properties[key]
-  if property then property:set(val)
-  else error("Unknown property: " .. key) end
+-- autoclone properties on lookup
+local function property__index(tbl, key)
+  local p = getmetatable(tbl)[property__index][key]
+  if p then
+    p = p:clone(); tbl[key] = p
+    return p
+  end
 end
 
-function mixin:setAnimation(name, easing, duration)
-  local property = self.properties[name]
-  assert(getmetatable(property) ~= GroupInstance)
-  property.easing, property.duration = easing, duration
-  if easing then setmetatable(property, AnimatedPropertyInstance)
-  else setmetatable(property, PropertyInstance) end
+-- setup autoclone functionality
+local function subclassed(self, other)
+  other.static.properties = setmetatable({}, {
+    [property__index] = self.static.properties,
+    __index = property__index
+  })
 end
 
-local function noMatcher() return true end
-function mixin:setMatcher(name, matcher)
-  self.properties[name].matcher = matcher or noMatcher
-end
-
-function mixin:bind(name, object, otherName)
-  local property = self.properties[name]
-  assert(getmetatable(property) ~= GroupInstance)
-end
-
-function Property:initialize(name, default)
+function Property:included(class)
+  class.init.Property = initialize
+  class.subc.Property = subclassed
 
 end
 
-function Property:clone(newValue)
-
+--------------------------------------------------------------------------------
+-- Static Methods
+--------------------------------------------------------------------------------
+function Property.static:addProperty(name)
+  local p = SimpleProperty(name); self.properties[name] = p
+  return p
 end
 
-function Property:match(matcher)
-
+function Property.static:addGroup(name)
+  local p = GroupProperty(name); self.properties[name] = p
+  return p
 end
 
-function Property:animate(easing, duration)
-
+function Property.static:addList(name)
+  local p = ListProperty(name); self.properties[name] = p
+  return p
 end
 
-function Property:createInstance(parent)
+function Property.static:property(name)
+  return self.properties[name]
+end
 
+--------------------------------------------------------------------------------
+-- Instance Methods
+--------------------------------------------------------------------------------
+function Property.__index(tbl, key)
+  local p = tbl.properties[key]
+  if p then return p:get() end
+end
+
+function Property.__newindex(tbl, key, val)
+  local p = tbl.properties[key]
+  if p then p:set(val) end
+  -- TODO error message ?
 end
 
 return Property
