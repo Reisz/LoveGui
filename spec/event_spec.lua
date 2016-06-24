@@ -1,5 +1,5 @@
 local class = require "lib.middleclass"
-local Event = require "util.Event"
+local Event = require "systems.Event"
 
 local Object = class("Object")
 function Object:initialize(parent) self.parent = parent end

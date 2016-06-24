@@ -11,7 +11,7 @@
 --- __call field of the matchers metatable is set to check, allowing you to
 --- write `matcher(value)`.
 
-local env = require "util.matching.env"
+local env = require "systems.matching.env"
 
 local matcher = {}
 

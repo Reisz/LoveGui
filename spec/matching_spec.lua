@@ -1,4 +1,4 @@
-local matcher = require "util.matching"
+local matcher = require "systems.matching"
 local class = require "lib.middleclass"
 
 describe("util.matching", function()

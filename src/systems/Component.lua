@@ -1,37 +1,48 @@
 local class = require "lib.middleclass"
 
 --------------------------------------------------------------------------------
--- Mixin preparation
+-- Class Def & Mixins
 --------------------------------------------------------------------------------
 local Component = class("Component")
-Component.static.init, Component.static.subc = {}, {}
+
+local mixinTables = { "mixin_intialize", "mixin_subclassed", "mixin_clone" }
+for _,v in ipairs(mixinTables) do Component.static[v] = {} end
+
+Component:include(require "systems.Property")
+--Component:include(require "systems.ListProperty")
+--Component:include(require "systems.Relationship")
+--Component:include(require "systems.Querying")
+
+--------------------------------------------------------------------------------
+-- Delegate behavior to mixins
+--------------------------------------------------------------------------------
 
 function Component:initialize(parent)
-  -- update inherited properties before anything else
-  if self.class.super and self.class.super.initialize then
-    self.class.super.initialize(self, parent)
-  end
-
   -- initlialize mixins
-  for _,v in pairs(self.init) do
+  for _,v in ipairs(self.mixin_intialize) do
     v(self, parent)
   end
 end
 
 function Component.static:subclassed(other)
   -- inherit mixin methods
-  other.static.init = setmetatable({}, { __index = self.init })
-  other.static.subc = setmetatable({}, { __index = self.init })
+  for _,v in ipairs(mixinTables) do
+    other.static[v] = setmetatable({}, { __index = self[v] })
+  end
 
   -- do mixin subclassing
-  for _,v in pairs(self.subc) do
+  for _,v in ipairs(self.mixin_subclassed) do
     v(self, other)
   end
 end
 
---------------------------------------------------------------------------------
--- Default Mixins
---------------------------------------------------------------------------------
-Component:include(require "systems.Property")
+function Component:clone()
+  local other = self.class:allocate()
+
+  -- do mixin subclassing
+  for _,v in ipairs(self.mixin_clone) do
+    v(self, other)
+  end
+end
 
 return Component

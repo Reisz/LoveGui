@@ -1,24 +1,20 @@
-local class = require "lib.middleclass"
-
-local SimpleProperty = class("SimpleProperty")
+local SimpleProperty = {}
 
 --------------------------------------------------------------------------------
 -- Internal
 --------------------------------------------------------------------------------
-function SimpleProperty:initialize(name)
-  self.name = name
-  self:setMatcher()
+local function new(tbl)
+  return setmetatable(tbl, {
+    __index = SimpleProperty
+  })
 end
-
 
 function SimpleProperty:clone()
-  local p = SimpleProperty()
-  for i,v in pairs(self) do p[i] = v end
-  return p
-end
-
-function SimpleProperty:create()
-  -- TODO
+  local p = {}
+  for i, v in pairs(self) do
+    p[i] = v
+  end
+  return new(p)
 end
 
 --------------------------------------------------------------------------------
@@ -43,4 +39,12 @@ function SimpleProperty:getMatcher()
   return self.matcher
 end
 
-return SimpleProperty
+--------------------------------------------------------------------------------
+-- Constructor
+--------------------------------------------------------------------------------
+return function(name)
+  return new {
+    name = name,
+    matcher = dummy
+  }
+end

@@ -1,4 +1,4 @@
-local metatables = require "util.matching.metatables"
+local metatables = require "systems.matching.metatables"
 
 local env = { is = {} }
 
@@ -38,7 +38,7 @@ usemt_list "any"
 usemt_call "may"
 
 -- lua matchers
-env.t = require "util.matching.type"
+env.t = require "systems.matching.type"
 usemt_map "v" -- set of possible values
 usemt_list "tbl" -- structure of a table
 usemt_call "list" -- (matcher, min, max) (min & max == nil -> any length, also empty) (max == nil -> exact size)

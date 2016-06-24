@@ -1,39 +1,45 @@
+local list = require "lib.list"
+
 local Relationship = {}
 
 --------------------------------------------------------------------------------
--- Initialize / Subclass
+-- Initialize / Clone
 --------------------------------------------------------------------------------
 local function initialize(self, parent)
   self.parent = parent
-
-  local children = {}; self.children = children
-  for i,v in ipairs(self.static.children) do
-    children[i] = v:new(self)
-  end
+  self.children = {}
 end
 
-local function subclassed(self, other)
-  local children = {}; other.static.children = children
-  for i,v in ipairs(self.static.children) do
-    children[i] = v
+local function clone(self, other)
+  local children = {}
+  for i,v in ipairs(self.children) do
+    children[i] = v:clone()
   end
+  other.children = children
 end
 
 function Relationship:included(class)
   class.init.Relationship = initialize
-  class.subc.Relationship = subclassed
-  class.static.children = {}
-end
-
---------------------------------------------------------------------------------
--- Static Methods
---------------------------------------------------------------------------------
-function Relationship.static:addChild(child)
-  table.insert(self.children, child)
+  class.clone.Relationship = clone
 end
 
 --------------------------------------------------------------------------------
 -- Instance Methods
 --------------------------------------------------------------------------------
+function Relationship:setParent(parent)
+  -- clear old parent
+  local oldParent = self.parent
+  if oldParent then
+    list:removeOne(oldParent.children, self)
+  end
+
+  -- add new parent
+  if parent ~= oldParent then
+    self.parent = parent
+    table.insert(parent.children, self)
+  end
+end
+
+-- TODO reimplement context functionality
 
 return Relationship
