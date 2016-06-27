@@ -7,7 +7,7 @@ local ListProperty = {}
 -- Initialize / Clone
 --------------------------------------------------------------------------------
 local function initialize(self)
-  self.lists = {}
+  self.lists = {} -- 
 end
 
 local function clone(self, other)
@@ -23,10 +23,17 @@ end
 --------------------------------------------------------------------------------
 -- Instance Methods
 --------------------------------------------------------------------------------
-function ListProperty:createList(name)
-  assert(self.properties[name] == nil,
-    "Trying to overwrite existing property with list!")
-  local l = {}; self.lists[name] = l
+function ListProperty:list(name)
+  local l = self.lists[name]
+
+  if not l then
+    assert(self.properties[name] == nil,
+      "Trying to overwrite existing property with list!")
+    -- l = list.wrap()
+    self.lists[name] = l
+  end
+
+  return l
 end
 
 local dummy = function() return true end

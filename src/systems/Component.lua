@@ -9,7 +9,7 @@ local mixinTables = { "mixin_intialize", "mixin_subclassed", "mixin_clone" }
 for _,v in ipairs(mixinTables) do Component.static[v] = {} end
 
 Component:include(require "systems.Property")
---Component:include(require "systems.ListProperty")
+Component:include(require "systems.ListProperty")
 --Component:include(require "systems.Relationship")
 --Component:include(require "systems.Querying")
 
