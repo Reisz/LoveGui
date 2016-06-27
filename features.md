@@ -3,7 +3,11 @@
 ### Component
 - Properties
   - Instance only
-  - Normal & List Variants
+  - Normal
+    - Copy-on-write
+    - Fallback to inherited value
+  - Special
+    - Manage own behaviour for cloning, matching, binding and notifies
   - Notifies on Chages
   - Can bind to properties and model entries
     - Can also do calculations in bindng
