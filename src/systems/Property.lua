@@ -2,14 +2,19 @@ local debug = require "systems.debug"
 
 local Property = {}
 local _nil = function() end; Property._nil = _nil
+-- _get_special allows certain values (usually unique function pointers) to
+-- cause Property:get(name) to return someting other than the value itself
+-- expects specialEvaluator(self:Component, name:string)
+local _get_special = {}; Property._get_case = _get_special
+_get_special[_nil] = function() return nil end
 
 --------------------------------------------------------------------------------
 -- Initialize / Clone
 --------------------------------------------------------------------------------
 local function initialize(self)
-  self.properties = {}
-  self._properties = {}
-  self.matchers = {}
+  rawset(self, "properties", {})
+  rawset(self, "_properties", {})
+  rawset(self, "matchers", {})
 end
 
 local function clone(self, other)
@@ -33,22 +38,22 @@ end
 --------------------------------------------------------------------------------
 local function _isProperty(self, name)
   return type(self.properties[name]) ~= "nil"
-     and type(self.matchers[name]) ~= "nil"
+     or type(self.matchers[name]) ~= "nil"
 end
 
-local function _isSpecial(self, name)
+local function _isObject(self, name)
   return type(self._properties[name]) ~= "nil"
 end
 
 local function hasProperty(self, name)
-  return _isProperty(self, name) or _isSpecial(self, name)
+  return _isProperty(self, name) or _isObject(self, name)
 end; Property.hasProperty = hasProperty
 
 function Property:clear(name)
   if _isProperty(self, name) then
     self.properties[name] = nil
     self.matchers[name] = nil
-  elseif _isSpecial(self, name) then
+  elseif _isObject(self, name) then
     self._properties[name] = nil
   else
     -- method goal still met -> print instead of assert
@@ -56,19 +61,20 @@ function Property:clear(name)
   end
 end
 
--- get property value or special property
+-- get property value, evaluate special property or get object property
 function Property:get(name)
   local v = self.properties[name]
   if v then
-    if v ~= _nil then
-      return v
-    end
+    -- if v represents a special value (nil, binding, ...)
+    local s = _get_special[v]
+    if s then return s(self, name)
+    else return v end
   else
     return self._properties[name]
   end
 end
 
--- get matcher for property or special property
+-- get matcher for property or object property
 function Property:getMatcher(name)
   local m = self.matchers[name]
   if not m then
@@ -78,7 +84,7 @@ function Property:getMatcher(name)
   return m
 end
 
--- set matcher for property or special property
+-- set matcher for property or object property
 function Property:setMatcher(name, matcher)
   local s = self._properties[name]
   if s then
@@ -88,7 +94,7 @@ function Property:setMatcher(name, matcher)
   end
 end
 
--- create new special property
+-- create new object property
 -- wrappers must provide the following funcionality:
 -- - initialize(self, object:Component, name:string)
 -- - clone(self) : typeof(wrapper)
@@ -97,16 +103,21 @@ end
 function Property:create(name, wrapper)
   assert(not hasProperty(self, name),
     "Trying to overwrite existing property.")
+  -- allow wrappers to be identified by name
+  if type(wrapper) == "string" then
+    wrapper = require "systems.Property." .. wrapper
+  end
+  -- create a new wrapper instance
   self._properties[name] = wrapper:initialize(self, name)
 end
 
--- set property to a value, fail on special properties
+-- set property to a value, fail on object properties
 -- set("<name>", nil) will re-enable inheritance
 function Property:set(name, val)
-  -- prevent overwrites, so properties and special properties can share get()
-  -- this allows __index to also work for special properties
-  assert(not _isSpecial(self, name),
-    "Trying to overwrite existing special property.")
+  -- prevent overwrites, so properties and object properties can share get()
+  -- this allows __index to also work for object properties
+  assert(not _isObject(self, name),
+    "Trying to overwrite existing object property.")
 
   -- ensure type safety, if required
   local m = self.matchers[name]

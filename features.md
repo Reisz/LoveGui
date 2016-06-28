@@ -7,6 +7,9 @@
     - Copy-on-write
     - Fallback to inherited value
   - Special
+    - Ceratain (unique) values represent special states (nil, binding, ...)
+    - Apecial functions are executes when trying to get() those
+  - Object
     - Manage own behaviour for cloning, matching, binding and notifies
   - Notifies on Chages
   - Can bind to properties and model entries
