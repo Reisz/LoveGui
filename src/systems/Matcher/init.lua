@@ -22,13 +22,13 @@ require "systems.Matcher.lua" (env)
 local wrapCode
 if _VERSION == "Lua 5.1" then
   wrapCode = function (code)
-    local fn, msg = loadstring("return " .. m)
+    local fn, msg = loadstring("return " .. code)
     if not fn then error(msg) end
     return setfenv(fn, env)()
   end
 else -- Lua 5.2 or higher
   wrapCode = function (code)
-    local fn, msg = load("return " .. m, "matcher", "bt", env)
+    local fn, msg = load("return " .. code, "matcher", "bt", env)
     if not fn then error(msg) end
     return fn()
   end
@@ -37,13 +37,13 @@ Matcher.wrapCode = wrapCode
 
 local function cleanCode(code)
   return string.gsub(code, "[%(%)]", {
-    "(" = "{", ")" = "}"
+    ["("] = "{", [")"] = "}"
   })
 end
 
 
 function Matcher:new(code)
-  local f = wrapFunction(code)
+  local f = wrapCode(cleanCode(code))
   return setmetatable({}, {
     __call = function(_, ...) return f(...) end,
     __tostring = function() return code end

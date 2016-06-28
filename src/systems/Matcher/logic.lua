@@ -1,7 +1,7 @@
 local functions = {
   all = function (self, ...)
     for i = 1, #self do
-      if not self[i] then return false end
+      if not self[i](...) then return false end
     end
   end,
 

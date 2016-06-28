@@ -9,9 +9,9 @@ local insert = table.insert
 --------------------------------------------------------------------------------
 -- List wrapper
 --------------------------------------------------------------------------------
-function list.wrap(list)
-  list = list or {}
-  setmetatable(list, {
+function list.wrap(tbl)
+  tbl = tbl or {}
+  setmetatable(tbl, {
     __index = list
     -- REVIEW add operators?
   })
@@ -33,7 +33,7 @@ end
 --------------------------------------------------------------------------------
 function list.append(tbl, ...)
   local n = #tbl
-  for i = 1, slect('#', ...) do
+  for i = 1, select('#', ...) do
     tbl[n + 1] = select(i, ...)
   end
 end
@@ -82,6 +82,7 @@ function list.isEmpty(tbl)
   return #tbl == 0
 end
 
+--[[
 function list.indexOf(tbl, val)
   -- TODO
 end
@@ -97,14 +98,15 @@ function list.move(from, to)
 end
 
 function list.swap(i, j)
-
+  -- TODO
 end
+--]]
 
 --------------------------------------------------------------------------------
 -- Removal
 --------------------------------------------------------------------------------
 function list.clear(tbl)
-  for i = 1 #tbl do
+  for i = 1, #tbl do
     tbl[i] = nil
   end
 end
@@ -160,6 +162,7 @@ list.removeAt = remove
 --------------------------------------------------------------------------------
 -- Cloning
 --------------------------------------------------------------------------------
+--[[
 function list.mid(tbl, pos, len)
   -- TODO
 end
@@ -167,5 +170,6 @@ end
 function list.clone(tbl)
   -- TODO
 end
+--]]
 
 return list
