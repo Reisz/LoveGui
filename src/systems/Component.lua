@@ -44,6 +44,8 @@ function Component:clone()
   for _,v in ipairs(self.class.mixin_clone) do
     v(self, other)
   end
+
+  return other
 end
 
 return Component

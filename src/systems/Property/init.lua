@@ -19,11 +19,11 @@ end
 
 local function clone(self, other)
   -- enable clone on write for normal properties
-  other.properties = setmetatable({}, { __index = self.properties })
-  other.matchers = setmetatable({}, { __index = self.matchers })
+  rawset(other, "properties", setmetatable({}, { __index = self.properties }))
+  rawset(other, "matchers", setmetatable({}, { __index = self.matchers }))
   -- execute cloning on special properties
-  other._properties = {}
-  for i,v in pairs(self.lists) do
+  rawset(other, "_properties", {})
+  for i,v in pairs(self._properties) do
     other._properties[i] = v:clone()
   end
 end
@@ -105,10 +105,12 @@ function Property:create(name, wrapper)
     "Trying to overwrite existing property.")
   -- allow wrappers to be identified by name
   if type(wrapper) == "string" then
-    wrapper = require "systems.Property." .. wrapper
+    wrapper = require ("systems.Property." .. wrapper)
   end
   -- create a new wrapper instance
-  self._properties[name] = wrapper:initialize(self, name)
+  local inst = wrapper:initialize(self, name)
+  self._properties[name] = inst
+  return inst
 end
 
 -- set property to a value, fail on object properties
