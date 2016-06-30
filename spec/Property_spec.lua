@@ -112,6 +112,7 @@ describe("systems.Property", function()
 
       local w = c:create("test", wrapper)
       assert.are_not.equal(wrapper, w)
+      -- TODO shouldn't need matcher
       assert.spy(wrapper.initialize).was_called_with(wrapper, match._, "test")
       assert.spy(w.initialize).was_called(1)
       assert.spy(w.clone).was_called(0)
@@ -130,19 +131,15 @@ describe("systems.Property", function()
         setfenv(c.create, uv)
       else -- Lua 5.2 or higher
         -- simulate setfenv
-        local function findenv(f)
-          local level = 1
-          repeat
-            local name, value = debug.getupvalue(f, level)
-            if name == '_ENV' then return level, value end
-            level = level + 1
-          until name == nil
-          return nil
-        end
-        local level, uv = findenv(c.create)
-        debug.setupvalue(c.create, level, env)
+        local i, index, uv = 1
+        repeat
+          local name, value = debug.getupvalue(c.create, i)
+          if name == '_ENV' then index, uv = i, value end
+          i = i + 1
+        until name == nil
+        debug.setupvalue(c.create, index, env)
         c:create("test", "Test")
-        debug.setupvalue(c.create, level, uv)
+        debug.setupvalue(c.create, index, uv)
       end
 
       assert.spy(_require).was_called_with("systems.Property.Test")
@@ -190,6 +187,15 @@ describe("systems.Property", function()
       local w = c:create("test", wrapper)
       w:setMatcher(m)
       assert.are.equal(m, c:getMatcher("test"))
+    end)
+
+    it("should tell object properties to clone when cloning", function()
+      local c = Component()
+
+      local w = c:create("test", wrapper)
+      local other = c:clone()
+
+      assert.spy(w.clone).was_called_with(w, other, "test")
     end)
   end)
 
