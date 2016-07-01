@@ -40,7 +40,7 @@ function set:rem(...)
 end; set.remove = set.rem
 
 function set:has(v)
-  return (not self.rem[v]) and self.add[v]
+  return (not self._rem[v]) and self._add[v]
 end
 
 function set:it()

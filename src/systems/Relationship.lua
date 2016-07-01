@@ -28,13 +28,13 @@ function Relationship:setParent(parent)
   -- clear old parent
   local oldParent = self._parent
   if oldParent then
-    oldParent.children:rem(self)
+    oldParent._children:rem(self)
   end
 
   -- add new parent
   if parent ~= oldParent then
-    self.parent = parent
-    parent.children:add(self)
+    self._parent = parent
+    parent._children:add(self)
   end
 end
 
@@ -43,7 +43,7 @@ function Relationship:getParent()
 end
 
 function Relationship:hasChild(c)
-  return self.children:has(c)
+  return self._children:has(c)
 end
 
 return Relationship
