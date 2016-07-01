@@ -26,13 +26,13 @@ function Component.static:subclassed(other)
   -- inherit mixin methods
   for _,mixin_name in ipairs(mixinTables) do
     local tbl = {}; other.static[mixin_name] = tbl
-    for i,v in ipairs(self.class[mixin_name]) do
+    for i,v in ipairs(self[mixin_name]) do
       tbl[i] = v
     end
   end
 
   -- do mixin subclassing
-  for _,v in ipairs(self.class.mixin_subclassed) do
+  for _,v in ipairs(self.mixin_subclassed) do
     v(self, other)
   end
 end
