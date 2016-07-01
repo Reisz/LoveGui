@@ -1,26 +1,24 @@
-local list = require "lib.list"
-
+-- requires Property mixin to be applied
 local Relationship = {}
 
 --------------------------------------------------------------------------------
 -- Initialize / Clone
 --------------------------------------------------------------------------------
-local function initialize(self, parent)
-  self.parent = parent
-  self.children = {}
+local function cMatch(v)
+  if type(v) == "nil" then return true end
+  return type(v) == "table" and type(v.class) == "table" and
+    v.class.name == "Component"
 end
 
-local function clone(self, other)
-  local children = {}
-  for i,v in ipairs(self.children) do
-    children[i] = v:clone()
-  end
-  other.children = children
+local function initialize(self, parent)
+  self:setMatcher("_parent", cMatch)
+  self:create("_children", "set")
+  self:setMatcher("_children", cMatch)
+  self:setParent(parent)
 end
 
 function Relationship:included(class)
-  class.init.Relationship = initialize
-  class.clone.Relationship = clone
+  table.insert(class.mixin_initialize, initialize)
 end
 
 --------------------------------------------------------------------------------
@@ -28,18 +26,24 @@ end
 --------------------------------------------------------------------------------
 function Relationship:setParent(parent)
   -- clear old parent
-  local oldParent = self.parent
+  local oldParent = self._parent
   if oldParent then
-    list:removeOne(oldParent.children, self)
+    oldParent.children:rem(self)
   end
 
   -- add new parent
   if parent ~= oldParent then
     self.parent = parent
-    table.insert(parent.children, self)
+    parent.children:add(self)
   end
 end
 
--- TODO reimplement context functionality
+function Relationship:getParent()
+  return self._parent
+end
+
+function Relationship:hasChild(c)
+  return self.children:has(c)
+end
 
 return Relationship

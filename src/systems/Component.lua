@@ -9,8 +9,9 @@ local mixinTables = { "mixin_initialize", "mixin_subclassed", "mixin_clone" }
 for _,v in ipairs(mixinTables) do Component.static[v] = {} end
 
 Component:include(require "systems.Property")
---Component:include(require "systems.Relationship")
+Component:include(require "systems.Relationship")
 --Component:include(require "systems.Querying")
+--Component:include(require "systems.Observer")
 
 --------------------------------------------------------------------------------
 -- Delegate behavior to mixins

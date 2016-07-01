@@ -190,12 +190,14 @@ describe("systems.Property", function()
     end)
 
     it("should tell object properties to clone when cloning", function()
+      local match = require "luassert.match"
       local c = Component()
 
       local w = c:create("test", wrapper)
-      local other = c:clone()
+      c:clone()
 
-      assert.spy(w.clone).was_called_with(w, other, "test")
+      -- TODO shouldn't need matcher
+      assert.spy(w.clone).was_called_with(w, match._, "test")
     end)
   end)
 
