@@ -1,4 +1,4 @@
-local Component = require "Systems.Component"
+local Component = require "systems.Component"
 
 describe("Systems.Relationship", function()
   it("should enable basic relationship", function()
