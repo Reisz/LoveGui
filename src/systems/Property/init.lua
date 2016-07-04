@@ -24,7 +24,7 @@ local function clone(self, other)
   -- execute cloning on special properties
   rawset(other, "_properties", {})
   for i,v in pairs(self._properties) do
-    other._properties[i] = v:clone(other, i)
+    other._properties[i] = v:clone(self, other, i)
   end
 end
 
@@ -96,10 +96,10 @@ end
 
 -- create new object property
 -- wrappers must provide the following funcionality:
--- - initialize(self, object:Component, name:string)
--- - clone(self, object:Component, name:string) : typeof(wrapper)
--- - setMatcher(self, matcher:Matcher)
--- - getMatcher(self) : Matcher
+-- - initialize(self:class<ObjectProperty>, object:Component, name:string)
+-- - clone(self:ObjectProperty, object:Component, other:Component name:string) : ObjectProperty
+-- - setMatcher(self:ObjectProperty, matcher:Matcher)
+-- - getMatcher(self:ObjectProperty) : Matcher
 function Property:create(name, wrapper)
   assert(not hasProperty(self, name),
     "Trying to overwrite existing property.")

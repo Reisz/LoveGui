@@ -5,10 +5,10 @@ function set.initialize()
   return setmetatable(s, { __index = set })
 end
 
-function set:clone(other)
+function set:clone()
   local s = set.initialize()
   setmetatable(s._add, { __index = function(_, key)
-    return other:has(key)
+    return self:has(key)
   end })
   return s
 end

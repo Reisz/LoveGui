@@ -46,4 +46,19 @@ function Relationship:hasChild(c)
   return self._children:has(c)
 end
 
+function Relationship:addChild(child)
+  child:setParent(self)
+end
+
+function Relationship:removeChild(child)
+  if child._parent == self then
+    child._parent = nil
+  end
+  self._children:rem(child)
+end
+
+function Relationship:forAllChildren()
+  return self._children:it()
+end
+
 return Relationship
