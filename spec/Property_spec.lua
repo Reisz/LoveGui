@@ -67,14 +67,13 @@ describe("systems.Property", function()
   end)
 
   it("should warn when trying to clear non-existent properties", function()
-    local debug = require "systems.debug"
-    mock(debug, true)
+    local log = require "systems.log"
+    local s = spy(function() end)
+    log.print = s
 
     local c = Component()
     c:clear("test")
-    assert.stub(debug.warn).was_called(1)
-
-    mock.revert(debug)
+    assert.spy(s).was_called(1)
   end)
 
   it("should fail on incompatible types", function()

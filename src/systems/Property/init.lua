@@ -1,4 +1,4 @@
-local debug = require "systems.debug"
+local log = require "systems.log"
 
 local Property = {}
 local _nil = function() end; Property._nil = _nil
@@ -57,7 +57,7 @@ function Property:clear(name)
     self._properties[name] = nil
   else
     -- method goal still met -> print instead of assert
-    debug.warn("Trying to clear non-existent property.")
+    log.warn("Trying to clear non-existent property.")
   end
 end
 

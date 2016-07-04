@@ -31,7 +31,7 @@ describe("Systems.Relationship", function()
 
     assert.is_true(p2:hasChild(c))
     c.test = 123
-    local test; for child in p2._children:it() do test = child.test end
+    local test; for child in p2:forAllChildren() do test = child.test end
     assert.are_same(123, test)
   end)
 
