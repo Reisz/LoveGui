@@ -24,7 +24,7 @@ describe("Systems.Relationship", function()
     assert.is_false(p1:hasChild(c))
   end)
 
-  pending("should apply changes from cloned children", function()
+  it("should apply changes from cloned children", function()
     local p1 = Component()
     local c = Component(p1)
     local p2 = p1:clone()

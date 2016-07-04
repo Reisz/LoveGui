@@ -193,7 +193,7 @@ describe("systems.Property", function()
       local c1 = Component()
 
       local w = c1:create("test", wrapper)
-      local c2 = c1:clone()
+      c1:clone()
 
       -- TODO shouldn't need matcher
       local match = require "luassert.match"
