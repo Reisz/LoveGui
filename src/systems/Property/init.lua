@@ -1,4 +1,5 @@
 local log = require "systems.log"
+local Matcher = require "systems.Matcher"
 
 local Property = {}
 local _nil = function() end; Property._nil = _nil
@@ -86,6 +87,10 @@ end
 
 -- set matcher for property or object property
 function Property:setMatcher(name, matcher)
+  if type(matcher) == "string" then
+    matcher = Matcher.new(matcher)
+  end
+
   local s = self._properties[name]
   if s then
     s:setMatcher(matcher)

@@ -34,6 +34,22 @@ describe("systems.Property", function()
     assert.are.equal(m, c:getMatcher("test2"))
   end)
 
+  it("should be able to add matchers as string", function()
+    local c = Component()
+
+    c:setMatcher("test", "number")
+    assert.has_no_error(function() c.test = 1 end)
+    assert.has_error(function() c.test = "test" end)
+
+    c:setMatcher("test", "string")
+    assert.has_error(function() c.test = 1 end)
+    assert.has_no_error(function() c.test = "test" end)
+
+    c:setMatcher("test", "__")
+    assert.has_error(function() c.test = 1 end)
+    assert.has_error(function() c.test = "test" end)
+  end)
+
   it("should be able to recognize properties by setting matchers", function()
     local c = Component()
     c:setMatcher("test1", function() return true end)

@@ -42,7 +42,10 @@ local function cleanCode(code)
 end
 
 
-function Matcher:new(code)
+function Matcher.new(code)
+  if code == "_" then return Matcher.all
+  elseif code == "__" then return Matcher.none end
+
   local f = wrapCode(cleanCode(code))
   return setmetatable({}, {
     __call = function(_, ...) return f(...) end,

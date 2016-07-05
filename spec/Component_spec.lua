@@ -6,8 +6,8 @@ describe("systems.Component", function()
   local mixinTables = { "mixin_initialize", "mixin_subclassed", "mixin_clone" }
 
   before_each(function()
-    table.insert(Component.mixin_subclassed, function() end)
     for _,mixinTable in ipairs(mixinTables) do
+      table.insert(Component[mixinTable], function() end)
       mock(Component[mixinTable], true)
     end
   end)
@@ -15,8 +15,8 @@ describe("systems.Component", function()
   after_each(function()
     for _,mixinTable in ipairs(mixinTables) do
       mock.revert(Component[mixinTable])
+      table.remove(Component[mixinTable])
     end
-    table.remove(Component.mixin_subclassed)
   end)
 
   it("should initialize propertly", function()
