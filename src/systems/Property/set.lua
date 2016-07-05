@@ -39,16 +39,12 @@ function set:rem(...)
   end
 end; set.remove = set.rem
 
-function set:clr(...)
-  for i = 1, select('#', ...) do
-    local v = select(i, ...)
-    self._add[v] = nil
-    self._rem[v] = nil
-  end
-end; set.clear = set.clr
-
 function set:has(v)
   return (not self._rem[v]) and (self._add[v] or false)
+end
+
+function set:exists(v)
+  return self._add[v] or false
 end
 
 local function set_next(sets, key)

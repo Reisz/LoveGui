@@ -26,7 +26,7 @@
   - Children define functionality of parent
   - Instance only
   - Stored in property
-  - List of other components
+  - Set of other components
 - Instance Object
   - Clone all property values / bindings
   - Clone all children (recursively)
