@@ -1,4 +1,4 @@
--- requires Property mixin to be applied
+-- requires Property mixin to be applied !before! this
 local Relationship = {}
 
 --------------------------------------------------------------------------------
