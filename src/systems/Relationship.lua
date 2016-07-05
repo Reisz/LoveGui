@@ -5,7 +5,6 @@ local Relationship = {}
 -- Initialize / Clone
 --------------------------------------------------------------------------------
 local function cMatch(v)
-  if type(v) == "nil" then return true end
   return type(v) == "table" and type(v.class) == "table" and
     v.class.name == "Component"
 end

@@ -8,6 +8,23 @@ describe("Systems.Relationship", function()
     assert.is_true(p:hasChild(c2))
   end)
 
+  it("should prevent adding non-Components", function()
+    local c = Component()
+    local m = c:getMatcher("_children")
+
+    assert.is_false(m(1))
+    assert.has_error(function() c:addChild(1) end)
+
+    assert.is_false(m("test"))
+    assert.has_error(function() c:addChild("test") end)
+
+    assert.is_false(m({}))
+    assert.has_error(function() c:addChild({}) end)
+
+    assert.is_false(m(nil))
+    assert.has_error(function() c:addChild(nil) end)
+  end)
+
   it("should be able to switch parents", function()
     local p1, p2 = Component(), Component()
     local c = Component(p1)

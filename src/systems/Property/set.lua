@@ -43,10 +43,6 @@ function set:has(v)
   return (not self._rem[v]) and (self._add[v] or false)
 end
 
-function set:exists(v)
-  return self._add[v] or false
-end
-
 local function set_next(sets, key)
   local s = sets[#sets]
   local k = next(s._add, key)
