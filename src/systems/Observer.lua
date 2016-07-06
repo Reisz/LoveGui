@@ -22,13 +22,13 @@ end
 local function getNameList(object, create)
   return (objects and objects[object])
     or (create and newNameList(objects, object))
-end
+end; Observer.getNameList = getNameList
 
 local function getReceiverList(object, name, create)
   local nameList = getNameList(object, create)
   return (nameList and nameList[name])
     or (create and newReceiverList(nameList, name))
-end
+end; Observer.getReceiverList = getReceiverList
 
 function Observer.subscribeTo(sender, msg_name, receiver, hnd_name)
   newHandlerEntry(getReceiverList(sender, msg_name, true), receiver, hnd_name)
