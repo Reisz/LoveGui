@@ -110,6 +110,21 @@ describe("systems.Property", function()
     assert.are.equal("nil", type(c.test1))
   end)
 
+  it("should notify on changes", function()
+    local c = Component()
+    local obs = mock({ obs = function() end })
+
+    c.test = 12
+    assert.spy(obs.obs).was_called(0)
+    c:subscribe("test", obs, "obs")
+    c.test = "hello"
+    assert.spy(obs.obs).was_called(1)
+    assert.spy(obs.obs).was_called_with(c, "test", "hello")
+    c:unsubscribe("test", obs, "obs")
+    c.test = { "world" }
+    assert.spy(obs.obs).was_called(1)
+  end)
+
   describe("Object Properties", function()
     local matchidx = {} -- to prevent accidental coupling
     local wrapper = mock{

@@ -134,7 +134,8 @@ function Property:set(name, val)
   if type(val) == "nil" then val = _nil end
   self.properties[name] = val
 
-  -- TODO notify
+  -- notify any observers
+  if self.notify then self:notify(name, val) end
 end
 
 --------------------------------------------------------------------------------
