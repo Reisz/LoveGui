@@ -1,6 +1,9 @@
 #Feature Overview
 ## Internal Systems
 ### Component
+- Instance Object
+  - Clone all property values / bindings
+  - Clone all children (recursively)
 - Properties
   - Instance only
   - Normal
@@ -27,9 +30,6 @@
   - Instance only
   - Stored in property
   - Set of other components
-- Instance Object
-  - Clone all property values / bindings
-  - Clone all children (recursively)
 - Querying
   - Instance only
   - Stored in properties
@@ -37,6 +37,12 @@
   - `class` list of grouping names (see css)
   - `id` unique per instance (derived from type if not specified)
   - Querying functionality, mass updates
+- Observer
+  - Direct connection between event and handlers
+  - No delgation, no data
+- Event
+  - Event is delegated up the tree
+  - Handler can be standalone and have atached data
 
 ### Item
 - Visual Component

@@ -34,13 +34,9 @@ function Observer.subscribeTo(sender, msg_name, receiver, hnd_name)
   newHandlerEntry(getReceiverList(sender, msg_name, true), receiver, hnd_name)
 end
 
-function Observer.unsubscribeFrom(sender, msg_name, receiver, hnd_name)
+function Observer.unsubscribeFrom(sender, msg_name, receiver)
   local list = getReceiverList(sender, msg_name)
-  for i,v in pairs(list or dummy_list) do
-    if i == receiver and (hnd_name and v == hnd_name) then
-      list[i] = nil
-    end
-  end
+  if list then list[receiver] = nil end
 end
 
 function Observer.notifyAs(sender, msg_name, ...)
